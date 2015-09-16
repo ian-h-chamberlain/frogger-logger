@@ -26,6 +26,17 @@ var LogLayer = cc.Layer.extend({
             if ((this.logs[i].x - this.logs[i].width/2) > cc.winSize.width) {
                 delete this.logs[i];
                 this.logs.splice(i, 1);
+                continue;
+            }
+
+            // check logs for hitting the bank
+            if (this.logs[i].y >= cc.winSize.height - 128) {
+                this.logs[i].y = 640;
+                this.logs[i].velY = 0;
+            }
+            if (this.logs[i].y <= 128 + this.logs[i].height) {
+                this.logs[i].y = 128 + this.logs[i].height;
+                this.logs[i].velY = 0;
             }
         }
     },
@@ -41,8 +52,8 @@ var LogLayer = cc.Layer.extend({
         for (var i=0; i<this.logs.length; i++) {
             // ensure that the new log will not overlap an existing log
             if (newLog.y >= this.logs[i].y - 1.5*this.logs[i].height
-                && newLog.y <= this.logs[i].y + 1.5*this.logs[i].height
-                && this.logs[i].x <= cc.winSize.width / 3) {
+                    && newLog.y <= this.logs[i].y + 1.5*this.logs[i].height
+                    && this.logs[i].x <= cc.winSize.width / 3) {
                 return;
             }
         }
@@ -109,7 +120,12 @@ var LogSegment = cc.Sprite.extend({
     update: function(dt) {
         this.time += dt;
 
-        if (this.time - this.lastFrameUpdate >= 0.1) {
+        if (this.parent.velY != 0)
+            var updateTime = Math.abs(0.2 / this.parent.velY)
+        else
+            return;
+
+        if (this.time - this.lastFrameUpdate >= updateTime) {
             this.lastFrameUpdate = this.time;
 
             // roll the correct way based on y-velocity
