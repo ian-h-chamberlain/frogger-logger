@@ -19,7 +19,7 @@ var Log = cc.Sprite.extend({
 
     update: function(dt) {
 
-        // calculate where we're headed
+        // calculate where we're headed and update accordingly using the dt
         this.x += this.velX * this.height * dt;
         this.y += this.velY * this.height * dt;
     }
@@ -29,6 +29,7 @@ var LongLog = Log.extend({
     ctor: function(sprite) {
         this._super(sprite);
 
+        // different contact points than in Log
         this.contactPoints = [];
         this.contactPoints.push(cc.p(-0.33 * this.width, 0));
         this.contactPoints.push(cc.p(0, 0));
