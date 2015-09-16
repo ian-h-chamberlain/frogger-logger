@@ -14,6 +14,8 @@
         "src/resource.js",
         "src/app.js",
         "src/logs.js",
-        "src/GameScene.js"
+        "src/GameScene.js",
+        "src/player.js",
+        "src/input.js"
     ]
 }
