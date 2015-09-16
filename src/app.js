@@ -19,11 +19,7 @@ var LogLayer = cc.Layer.extend({
         // spawn logs randomly
         // TODO: check for other logs in spawn location and determine when to spawn logs
         if (Math.random() > 0.99) {
-            if (Math.random() > 0.5)
-                this.logs.push(new Log(res.log_png));
-            else
-                this.logs.push(new LongLog(res.longLog_png));
-            this.addChild(this.logs[this.logs.length-1]);
+           this.addLog();
         }
 
         // check logs for being off-screen and delete them if so
@@ -33,9 +29,32 @@ var LogLayer = cc.Layer.extend({
                 this.logs.splice(i, 1);
             }
         }
+    },
+
+    // addLog - adds a log randomly with bounds checking
+    addLog: function() {
+        var newLog;
+        if (Math.random() > 0.5)
+            newLog = new Log(res.log_png);
+        else
+            newLog = new LongLog(res.longLog_png);
+
+        for (var i=0; i<this.logs.length; i++) {
+            // ensure that the new log will not overlap an existing log
+            if (newLog.y >= this.logs[i].y - 1.5*this.logs[i].height
+                    && newLog.y <= this.logs[i].y + 1.5*this.logs[i].height
+                    && this.logs[i].x <= cc.winSize.width / 3) {
+                return;
+            }
+        }
+
+        // actually add the log
+        this.logs.push(newLog);
+        this.addChild(this.logs[this.logs.length - 1]);
     }
 });
 
+// a scene for testing logs – need not be included in final project
 var LogScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
@@ -43,4 +62,3 @@ var LogScene = cc.Scene.extend({
         this.addChild(layer);
     }
 });
-
