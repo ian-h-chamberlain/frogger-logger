@@ -12,7 +12,7 @@ var GameLayer = cc.Layer.extend({
         //TeamLogo.setPosition(centerpos);
         //this.addChild( TeamLogo);
         
-        cc.log("alsdjflaskjdflaskdfj");
+        cc.log("Entered Play Scene");
         
         return true;
     }
