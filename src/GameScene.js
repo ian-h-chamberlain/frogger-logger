@@ -84,51 +84,12 @@ var guiLayer = cc.Layer.extend({
         
         this.scheduleUpdate();
         
-        var Input = new inputRead();
-        this.addChild(Input);
-        
         return true;
     },
     update : function (dt) {
         this.Timer -= dt;
         this.LabelTime.setString("Time: "+ this.Timer.toPrecision(2));
         return true;
-    }
-});
-
-var inputRead = cc.Node.extend({
-    ctor : function () {
-        this._super();
-        if (cc.sys.capabilities.hasOwnProperty('keyboard'))
-        {
-            cc.eventManager.addListener(
-                cc.EventListener.create({
-                    event: cc.EventListener.KEYBOARD,
-                    onKeyPressed: this.onKeyPressed,
-                    onKeyReleased: this.onKeyReleased
-                }),
-            this );
-        }
-    },
-    onKeyPressed : function (key, event) {
-        switch (key) {
-        case cc.KEY.a : {cc.log("A");} break; 
-        case cc.KEY.s : {cc.log("S");} break;
-        case cc.KEY.w : {cc.log("W");} break;
-        case cc.KEY.d : {cc.log("D");} break;
-        case cc.KEY.shift : {cc.log("SHIFT");} break;
-        default : {cc.log(key)} break;
-        }
-    },
-    onKeyReleased : function (key, event) {
-        switch (key) {
-        case cc.KEY.a : {cc.log("A-");} break;
-        case cc.KEY.s : {cc.log("S-");} break;
-        case cc.KEY.w : {cc.log("W-");} break;
-        case cc.KEY.d : {cc.log("D-");} break;
-        case cc.KEY.shift : {cc.log("SHIFT-");} break;
-        default : {cc.log(key)} break;
-        }
     }
 });
 
@@ -142,8 +103,12 @@ var GameScene = cc.Scene.extend({
         
         // Draw the game
         // This will probably end up being multiple layers.
-        var layer = new LogLayer();
-        this.addChild(layer);
+        var logLayer = new LogLayer();
+        this.addChild(logLayer);
+        
+        var Player = new player();
+        var Input = new inputRead(Player);
+        logLayer.addChild(Input);
         
         // Environment
         var EnvLayer = new environmentLayer();
