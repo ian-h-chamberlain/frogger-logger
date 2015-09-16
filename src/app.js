@@ -8,6 +8,8 @@ var RpiLayer = cc.Layer.extend({
         var winsize = cc.director.getWinSize();
         var centerpos = cc.p(winsize.width / 2, winsize.height / 2);
         
+        
+        
         // Display an image
         var RpiFlag = new cc.Sprite ( res.RpiMono_png);
         RpiFlag.setPosition(centerpos);
@@ -65,6 +67,7 @@ var TeamLayer = cc.Layer.extend({
 var LogoScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
+        
         var layer = new TeamLayer();
         layer.init();
         this.addChild(layer);
