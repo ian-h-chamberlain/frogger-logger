@@ -145,9 +145,8 @@ var GameScene = cc.Scene.extend({
         
         // Draw the game
         // This will probably end up being multiple layers.
-        //var layer = new GameLayer();
-        //layer.init();
-        //this.addChild(layer);
+        var layer = new LogLayer();
+        this.addChild(layer);
         
         // Environment
         var EnvLayer = new environmentLayer();

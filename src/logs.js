@@ -59,7 +59,7 @@ var Log = cc.Sprite.extend({
         this._super(sprite);
 
         this.x = -this.width;
-        this.y = Math.floor((Math.random() * (cc.winSize.height - this.height * 2)) + this.height);   // randomly spawn on-screen
+        this.y = Math.floor((Math.random() * (cc.winSize.height - 256 - 2*this.height)) + this.height + 128);   // randomly spawn on-screen
 
         // X and Y velocity, in log-units per second
         this.velX = 1.6;
