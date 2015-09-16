@@ -12,9 +12,11 @@ var RpiLayer = cc.Layer.extend({
         RpiFlag.setPosition(centerpos);
         this.addChild( RpiFlag);
         
+        cc.log("Got to Rpi Scene!");
+        
         var NextScene = new LogoScene();
         var TransitionScene = new cc.TransitionFade(2, NextScene, cc.Color(0,0,0,1));
-        cc.director.runScene(TransitionScene);
+        cc.director.pushScene(TransitionScene);
         
         return true;
     }
@@ -30,10 +32,10 @@ var EnterWorldScene = cc.Scene.extend({
 });
 
 var TeamLayer = cc.Layer.extend({
-    ctor:function() {
+    ctor : function () {
         this._super();
     },
-    init:function(){
+    init : function () {
         this._super();
         
         var winsize = cc.director.getWinSize();
@@ -43,10 +45,18 @@ var TeamLayer = cc.Layer.extend({
         TeamLogo.setPosition(centerpos);
         this.addChild( TeamLogo);
         
-        //var NextScene = new GamePlayScene();
-        //var TransitionScene = new cc.TransitionFade(2, NextScene, cc.Color(0,0,0,1));
-        //cc.director.runScene(TransitionScene);
+        this.scheduleOnce( this.DoTransitionToGame, 2.5);
+        cc.log("Got To Logo Scene!");
         
+        
+        
+        return true;
+    },
+    DoTransitionToGame : function() {
+        cc.log("Ran CallBack");
+        var NNextScene = new GameScene();
+        var NTransitionScene = new cc.TransitionFade(2, NNextScene, cc.Color(0,0,0,1));
+        cc.director.pushScene(NTransitionScene);
         return true;
     }
 });
