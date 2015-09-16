@@ -57,12 +57,38 @@ var guiLayer = cc.Layer.extend({
     init : function () {
         this._super();
         
+        var winsize = cc.director.getWinSize();
+        var centerpos = cc.p(winsize.width / 2, winsize.height / 2);
         
+        this.Timer = 90000;
+        this.LabelTime = new cc.LabelTTF(" Time: "+ this.Timer/1000, "Arial", 32, new cc.Size(256, 64));
+        this.LabelTime.setHorizontalAlignment( cc.TEXT_ALIGN_LEFT);
+        this.LabelTime.setPosition( cc.p( 128, winsize.height - 48));
+        this.LabelTime.setColor( new cc.Color(0,0,0));
+        this.addChild( this.LabelTime);
+        
+        this.Level = 1;
+        this.LabelLevel = new cc.LabelTTF("Level: "+this.Level, "Arial", 32, new cc.Size(256, 64));
+        this.LabelLevel.setHorizontalAlignment( cc.TEXT_ALIGN_LEFT);
+        this.LabelLevel.setPosition( cc.p( 128, winsize.height - 80));
+        this.LabelLevel.setColor( new cc.Color(0,0,0));
+        this.addChild( this.LabelLevel);
+        
+        this.Score = 100;
+        this.LabelScore = new cc.LabelTTF( "Score: "+this.Score, "Arial", 32, new cc.Size( 196, 64));
+        this.LabelScore.setHorizontalAlignment( cc.TEXT_ALIGN_RIGHT);
+        this.LabelScore.setPosition(cc.p( winsize.width - 196/2, winsize.height - 80));
+        this.LabelScore.setColor( new cc.Color( 0, 0, 0));
+        this.addChild( this.LabelScore);
+        
+        this.scheduleUpdate();
+        //this.deltatime = this.calculateDeltatime();
         
         return true;
     },
     update : function () {
-        
+        //this.deltatime = this.calculateDeltatime();
+        //this.Timer -= this.deltatime;
         return true;
     }
 });
@@ -87,5 +113,8 @@ var GameScene = cc.Scene.extend({
         this.addChild(EnvLayer);
         
         // Gui
+        var GuiLayer = new guiLayer();
+        GuiLayer.init();
+        this.addChild(GuiLayer);
     }
 });
