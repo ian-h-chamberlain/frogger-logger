@@ -1,6 +1,6 @@
 var Log = cc.Sprite.extend({
-    ctor: function() {
-        this._super(res.log_png);
+    ctor: function(sprite) {
+        this._super(sprite);
 
         this.x = -this.width;
         this.y = Math.floor((Math.random() * cc.winSize.height) + 1);   // randomly spawn on-screen
@@ -13,8 +13,15 @@ var Log = cc.Sprite.extend({
     },
 
     update: function(dt) {
+
         // calculate where we're headed
-        this.x += this.velX * this.width * dt;
-        this.y += this.velY * this.width * dt;
+        this.x += this.velX * this.height * dt;
+        this.y += this.velY * this.height * dt;
+    }
+});
+
+var LongLog = Log.extend({
+    ctor: function(sprite) {
+        this._super(sprite);
     }
 });

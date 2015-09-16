@@ -1,5 +1,6 @@
 var res = {
-    log_png: "res/log.png"
+    log_png: "res/log.png",
+    longLog_png: "res/longlog.png"
 };
 
 var g_resources = [];
