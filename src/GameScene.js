@@ -84,12 +84,51 @@ var guiLayer = cc.Layer.extend({
         this.scheduleUpdate();
         //this.deltatime = this.calculateDeltatime();
         
+        var Input = new inputRead();
+        this.addChild(Input);
+        
         return true;
     },
     update : function () {
         //this.deltatime = this.calculateDeltatime();
         //this.Timer -= this.deltatime;
         return true;
+    }
+});
+
+var inputRead = cc.Node.extend({
+    ctor : function () {
+        this._super();
+        if (cc.sys.capabilities.hasOwnProperty('keyboard'))
+        {
+            cc.eventManager.addListener(
+                cc.EventListener.create({
+                    event: cc.EventListener.KEYBOARD,
+                    onKeyPressed: this.onKeyPressed,
+                    onKeyReleased: this.onKeyReleased
+                }),
+            this );
+        }
+    },
+    onKeyPressed : function (key, event) {
+        switch (key) {
+        case 65 : {cc.log("A");} break; 
+        case 83 : {cc.log("S");} break;
+        case 87 : {cc.log("W");} break;
+        case 68 : {cc.log("D");} break;
+        case 16 : {cc.log("SHIFT");} break;
+        default : {cc.log(key)} break;
+        }
+    },
+    onKeyReleased : function (key, event) {
+        switch (key) {
+        case 65 : {cc.log("A-");} break;
+        case 83 : {cc.log("S-");} break;
+        case 87 : {cc.log("W-");} break;
+        case 68 : {cc.log("D-");} break;
+        case 16 : {cc.log("SHIFT-");} break;
+        default : {cc.log(key)} break;
+        }
     }
 });
 
