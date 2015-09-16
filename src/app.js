@@ -18,7 +18,7 @@ var LogLayer = cc.Layer.extend({
     update: function(dt) {
         // spawn logs randomly
         // TODO: check for other logs in spawn location and determine when to spawn logs
-        if (Math.random() > 0.99) {
+        if (Math.random() > 0.9) {
            this.addLog();
         }
 
