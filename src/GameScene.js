@@ -75,6 +75,7 @@ var guiLayer = cc.Layer.extend({
         this.addChild( this.LabelLevel);
         
         this.Score = 100;
+        // TODO: Why doesn't right align work here?
         this.LabelScore = new cc.LabelTTF( "Score: "+this.Score, "Arial", 32, new cc.Size( 196, 64));
         this.LabelScore.setHorizontalAlignment( cc.TEXT_ALIGN_RIGHT);
         this.LabelScore.setPosition(cc.p( winsize.width - 196/2, winsize.height - 80));
@@ -90,6 +91,7 @@ var guiLayer = cc.Layer.extend({
         return true;
     },
     update : function () {
+        // TODO: Figure out how to get delta time and do a timer.
         //this.deltatime = this.calculateDeltatime();
         //this.Timer -= this.deltatime;
         return true;
@@ -110,6 +112,7 @@ var inputRead = cc.Node.extend({
             this );
         }
     },
+    // TODO: Are there virtual key codes we can use instead?
     onKeyPressed : function (key, event) {
         switch (key) {
         case 65 : {cc.log("A");} break; 
