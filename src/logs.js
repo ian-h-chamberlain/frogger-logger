@@ -12,6 +12,15 @@ var LogLayer = cc.Layer.extend({
         // schedule the update function to run
         this.scheduleUpdate();
 
+        // add a drawNode for primitive drawing
+        this.lowerDn = new cc.DrawNode();
+        this.addChild(this.lowerDn);
+        this.lowerDn.setLocalZOrder(20);
+
+        this.upperDn = new cc.DrawNode();
+        this.addChild(this.upperDn);
+        this.upperDn.setLocalZOrder(21);
+
         return true;
     },
 
@@ -30,13 +39,43 @@ var LogLayer = cc.Layer.extend({
             }
 
             // check logs for hitting the bank
-            if (this.logs[i].y >= cc.winSize.height - 128) {
-                this.logs[i].y = 640;
+            if (this.logs[i].y >= cc.winSize.height - 128 - this.logs[i].height / 2) {
+                this.logs[i].y = cc.winSize.height - 128 - this.logs[i].height / 2;
                 this.logs[i].velY = 0;
             }
-            if (this.logs[i].y <= 128 + this.logs[i].height) {
-                this.logs[i].y = 128 + this.logs[i].height;
+            if (this.logs[i].y <= 128 + this.logs[i].height / 2) {
+                this.logs[i].y = 128 + this.logs[i].height / 2;
                 this.logs[i].velY = 0;
+            }
+
+            // now check against other logs
+            for (var j=0; j<this.logs.length; j++) {
+                if (i == j)
+                    continue;
+
+                if (cc.rectIntersectsRect(
+                        this.logs[i].getBoundingBox(),
+                        this.logs[j].getBoundingBox())) {
+                    var newVelY = (this.logs[i].velY + this.logs[j].velY) / 2;
+                    this.logs[i].velY = newVelY;
+                    this.logs[j].velY = newVelY;
+                }
+            }
+        }
+
+        // draw bounding boxes and anchor points for each log, for debugging purposes
+        this.lowerDn.clear();
+        for (var i=0; i<this.logs.length; i++) {
+            var start = cc.p(this.logs[i].getBoundingBox().x - this.logs[i].getBoundingBox().width / 2,
+                this.logs[i].getBoundingBox().y - this.logs[i].getBoundingBox().height / 2);
+            var finish = cc.p(this.logs[i].getBoundingBox().x + this.logs[i].getBoundingBox().width / 2,
+                this.logs[i].getBoundingBox().y + this.logs[i].getBoundingBox().height / 2);
+
+            // draw the bounding box
+            this.lowerDn.drawRect(start, finish, null, 2, cc.color(0, 255, 0, 255));
+            // draw the contact points of the log
+            for (var j=0; j < this.logs[i].getContactPoints().length; j++) {
+                this.lowerDn.drawDot(this.logs[i].getContactPoints()[j], 7, cc.color(255, 0, 0, 255));
             }
         }
     },
@@ -121,7 +160,7 @@ var LogSegment = cc.Sprite.extend({
         this.time += dt;
 
         if (this.parent.velY != 0)
-            var updateTime = Math.abs(0.2 / this.parent.velY)
+            var updateTime = Math.abs(0.2 / this.parent.velY);
         else
             return;
 
@@ -172,7 +211,7 @@ var Log = cc.Sprite.extend({
         segment = new LogSegment("right");
         this.addChild(segment, 0, this.logLength - 1);
 
-        // position the log segments as necesssary
+        // position the log segments as necessary
         for (var i=0; i<this.logLength; i++) {
             this.getChildByTag(i).x = (i - (this.logLength - 1)/2) * 64;
         }
@@ -180,6 +219,8 @@ var Log = cc.Sprite.extend({
         // set this.width correctly and height
         this.width = this.logLength * 64;
         this.height = 64;
+
+        this.setAnchorPoint(cc.p(0, 0));
 
         this.x = -this.width;
         this.y = Math.floor((Math.random() * (cc.winSize.height - 256 - 2*this.height)) + this.height + 128);   // randomly spawn on-screen
@@ -196,7 +237,7 @@ var Log = cc.Sprite.extend({
         var points = [];
         for (var i = 0; i < this.logLength; i++) {
             points.push(cc.pAdd(this.getPosition(),
-                this.getChildren()[i].getPosition()));
+                this.getChildByTag(i).getPosition()));
         }
         return points;
     },
