@@ -115,6 +115,8 @@ var LogSegment = cc.Sprite.extend({
         this.time = 0;
         this.lastFrameUpdate = 0;
 
+        this.score = 100;   // points this log segment is worth
+
         // initialize the correct sprites
         switch(this.type) {
             case "left":
@@ -240,6 +242,14 @@ var Log = cc.Sprite.extend({
                 this.getChildByTag(i).getPosition()));
         }
         return points;
+    },
+
+    getScore: function() {
+        var score = 0;
+        for (var i=0; i<this.logLength; i++) {
+            score += this.getChildByTag(i).score;
+        }
+        return score;
     },
 
     update: function(dt) {
