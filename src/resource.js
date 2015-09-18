@@ -8,7 +8,8 @@ var res = {
     BottomBank_png : "res/BottomBank.png",
     CityTest_png : "res/City.png",
     TopBank_png : "res/TopBank.png",
-    City1_png : "res/TownBg1.png"
+    City1_png : "res/TownBg1.png",
+    Saw_png : "res/saw.png"
 };
 
 var g_resources = [];

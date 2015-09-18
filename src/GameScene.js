@@ -154,5 +154,10 @@ var GameScene = cc.Scene.extend({
         var GuiLayer = new guiLayer();
         GuiLayer.init();
         this.addChild(GuiLayer);
+
+        // Saws
+        var sawLayer = new SawLayer();
+        sawLayer.init();
+        this.addChild(sawLayer);
     }
 });
