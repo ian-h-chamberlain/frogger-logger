@@ -24,7 +24,15 @@ var res = {
     TopBank_png : "res/TopBank.png",
     City1_png : "res/TownBg1.png",
     
-    PlayerStanding_png : "res/player/man_stand.png"
+    lumberjackstand_png : "res/player/man_stand.png",
+    lumberjackRunDown1_png : "res/player/man_run_down_1.png",
+    lumberjackRunDown2_png : "res/player/man_run_down_2.png",
+    lumberjackRunDown3_png : "res/player/man_run_down_3.png",
+    lumberjackRunDown4_png : "res/player/man_run_down_4.png",
+    lumberjackRunUp1_png : "res/player/man_run_up_1.png",
+    lumberjackRunUp2_png : "res/player/man_run_up_2.png",
+    lumberjackRunUp3_png : "res/player/man_run_up_3.png",
+    lumberjackRunUp4_png : "res/player/man_run_up_4.png"
 };
 
 var g_resources = [];
