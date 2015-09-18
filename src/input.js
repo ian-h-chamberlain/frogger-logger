@@ -55,10 +55,10 @@ var inputRead = cc.Node.extend({
                 this.KeyStates.d = this.DOWN;
             }
         } break;
-        case cc.KEY.shift : {c
+        case cc.KEY.shift : {
             if (this.KeyStates.shift == this.UP)
             {
-                c.log("SHIFT");
+                cc.log("SHIFT");
                 this.KeyStates.shift = this.DOWN;
             }
         } break;
