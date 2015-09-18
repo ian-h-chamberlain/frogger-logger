@@ -109,8 +109,6 @@ var GameScene = cc.Scene.extend({
         var log = logLayer.logs[0];
         
         var Player = new player( log, logLayer.logs);
-        var Input = new inputRead(Player);
-        logLayer.addChild(Input);
         logLayer.addChild(Player);
         
         // Environment
