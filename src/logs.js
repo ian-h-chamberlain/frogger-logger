@@ -13,13 +13,11 @@ var LogLayer = cc.Layer.extend({
         this.scheduleUpdate();
 
         // add a drawNode for primitive drawing
-        this.lowerDn = new cc.DrawNode();
-        this.addChild(this.lowerDn);
-        this.lowerDn.setLocalZOrder(20);
+        this.dn = new cc.DrawNode();
+        this.addChild(this.dn);
+        this.dn.setLocalZOrder(20);
 
-        this.upperDn = new cc.DrawNode();
-        this.addChild(this.upperDn);
-        this.upperDn.setLocalZOrder(21);
+        cc.PhysicsSprite();
 
         return true;
     },
@@ -39,11 +37,11 @@ var LogLayer = cc.Layer.extend({
             }
 
             // check logs for hitting the bank
-            if (this.logs[i].y >= cc.winSize.height - 128 - this.logs[i].height / 2) {
+            if (this.logs[i].y > cc.winSize.height - 128 - this.logs[i].height / 2) {
                 this.logs[i].y = cc.winSize.height - 128 - this.logs[i].height / 2;
                 this.logs[i].velY = 0;
             }
-            if (this.logs[i].y <= 128 + this.logs[i].height / 2) {
+            if (this.logs[i].y < 128 + this.logs[i].height / 2) {
                 this.logs[i].y = 128 + this.logs[i].height / 2;
                 this.logs[i].velY = 0;
             }
@@ -53,21 +51,29 @@ var LogLayer = cc.Layer.extend({
                 if (i == j)
                     continue;
 
-                if (cc.rectIntersectsRect(
-                        this.logs[i].getBoundingBox(),
-                        this.logs[j].getBoundingBox())) {
-                    var newVelX = (this.logs[i].velX + this.logs[j].velX) /2;
+                var b1 = this.logs[i].getBoundingBox();
+                var b2 = this.logs[j].getBoundingBox();
+
+                // TODO: implement collision checking or use physics bodies
+
+                /*
+                if (this.logs[i].velX > 0 &&
+                        b1.x + b1.width/2 > b2.x - b2.width/2 &&
+                        b1.y + b1.height/2 < b2.y + b2.height/2 &&
+                        b1.y + b1.height/2 > b2.y - b2.height/2 &&
+                        cc.rectIntersectsRect(b1, b2)) {
+
+                    this.logs[i].x = this.logs[j].x - (b2.width/2 + b1.width/2);
+                    var newVelX = (this.logs[i].velX + this.logs[j].velX) / 2;
                     this.logs[i].velX = newVelX;
                     this.logs[j].velX = newVelX;
-                    var newVelY = (this.logs[i].velY + this.logs[j].velY) / 2;
-                    this.logs[i].velY = newVelY;
-                    this.logs[j].velY = newVelY;
                 }
+                */
             }
         }
 
         // draw bounding boxes and anchor points for each log, for debugging purposes
-        this.lowerDn.clear();
+        this.dn.clear();
         for (var i=0; i<this.logs.length; i++) {
             var start = cc.p(this.logs[i].getBoundingBox().x - this.logs[i].getBoundingBox().width / 2,
                 this.logs[i].getBoundingBox().y - this.logs[i].getBoundingBox().height / 2);
@@ -75,11 +81,12 @@ var LogLayer = cc.Layer.extend({
                 this.logs[i].getBoundingBox().y + this.logs[i].getBoundingBox().height / 2);
 
             // draw the bounding box
-            this.lowerDn.drawRect(start, finish, null, 2, cc.color(0, 255, 0, 255));
+            this.dn.drawRect(start, finish, null, 2, cc.color(0, 255, 0, 255));
             // draw the contact points of the log
             for (var j=0; j < this.logs[i].getContactPoints().length; j++) {
-                this.lowerDn.drawDot(this.logs[i].getContactPoints()[j], 7, cc.color(255, 0, 0, 255));
+                this.dn.drawDot(this.logs[i].getContactPoints()[j], 5, cc.color(255, 0, 0, 255));
             }
+            this.dn.drawDot(this.logs[i].getPosition(), 7, cc.color(255, 0, 255, 255));
         }
     },
 
