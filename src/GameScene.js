@@ -40,7 +40,7 @@ var environmentLayer = cc.Layer.extend({
         this.addChild( bottomBank);
         
         // The town at the top of the screen
-        var town = new cc.Sprite (res.CityTest_png);
+        var town = new cc.Sprite (res.City1_png);
         town.setPosition (centerpos.x, winsize.height - 64);
         this.addChild( town);
         
@@ -60,8 +60,8 @@ var guiLayer = cc.Layer.extend({
         var winsize = cc.director.getWinSize();
         var centerpos = cc.p(winsize.width / 2, winsize.height / 2);
         
-        this.Timer = 90000;
-        this.LabelTime = new cc.LabelTTF(" Time: "+ this.Timer/1000, "Arial", 32, new cc.Size(256, 64));
+        this.Timer = 90;
+        this.LabelTime = new cc.LabelTTF("Time: "+ this.Timer.toPrecision(2), "Arial", 32, new cc.Size(256, 64));
         this.LabelTime.setHorizontalAlignment( cc.TEXT_ALIGN_LEFT);
         this.LabelTime.setPosition( cc.p( 128, winsize.height - 48));
         this.LabelTime.setColor( new cc.Color(0,0,0));
@@ -83,55 +83,13 @@ var guiLayer = cc.Layer.extend({
         this.addChild( this.LabelScore);
         
         this.scheduleUpdate();
-        //this.deltatime = this.calculateDeltatime();
-        
-        var Input = new inputRead();
-        this.addChild(Input);
         
         return true;
     },
-    update : function () {
-        // TODO: Figure out how to get delta time and do a timer.
-        //this.deltatime = this.calculateDeltatime();
-        //this.Timer -= this.deltatime;
+    update : function (dt) {
+        this.Timer -= dt;
+        this.LabelTime.setString("Time: "+ this.Timer.toPrecision(2));
         return true;
-    }
-});
-
-var inputRead = cc.Node.extend({
-    ctor : function () {
-        this._super();
-        if (cc.sys.capabilities.hasOwnProperty('keyboard'))
-        {
-            cc.eventManager.addListener(
-                cc.EventListener.create({
-                    event: cc.EventListener.KEYBOARD,
-                    onKeyPressed: this.onKeyPressed,
-                    onKeyReleased: this.onKeyReleased
-                }),
-            this );
-        }
-    },
-    // TODO: Are there virtual key codes we can use instead?
-    onKeyPressed : function (key, event) {
-        switch (key) {
-        case 65 : {cc.log("A");} break; 
-        case 83 : {cc.log("S");} break;
-        case 87 : {cc.log("W");} break;
-        case 68 : {cc.log("D");} break;
-        case 16 : {cc.log("SHIFT");} break;
-        default : {cc.log(key)} break;
-        }
-    },
-    onKeyReleased : function (key, event) {
-        switch (key) {
-        case 65 : {cc.log("A-");} break;
-        case 83 : {cc.log("S-");} break;
-        case 87 : {cc.log("W-");} break;
-        case 68 : {cc.log("D-");} break;
-        case 16 : {cc.log("SHIFT-");} break;
-        default : {cc.log(key)} break;
-        }
     }
 });
 
@@ -145,8 +103,15 @@ var GameScene = cc.Scene.extend({
         
         // Draw the game
         // This will probably end up being multiple layers.
-        var layer = new LogLayer();
-        this.addChild(layer);
+        var logLayer = new LogLayer();
+        this.addChild(logLayer);
+        logLayer.addLog();
+        var log = logLayer.logs[0];
+        
+        var Player = new player( log, logLayer.logs);
+        var Input = new inputRead(Player);
+        logLayer.addChild(Input);
+        logLayer.addChild(Player);
         
         // Environment
         var EnvLayer = new environmentLayer();

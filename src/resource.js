@@ -21,7 +21,10 @@ var res = {
     
     BottomBank_png : "res/BottomBank.png",
     CityTest_png : "res/City.png",
-    TopBank_png : "res/TopBank.png"
+    TopBank_png : "res/TopBank.png",
+    City1_png : "res/TownBg1.png",
+    
+    PlayerStanding_png : "res/player/man_stand.png"
 };
 
 var g_resources = [];
