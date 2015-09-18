@@ -12,15 +12,14 @@ var inputRead = cc.Node.extend({
             this );
         }
         
-        this.DOWN = 0;
-        this.UP = 1;
+        this.player = player;
         
         this.KeyStates = {
-            a     : this.UP,
-            d     : this.UP,
-            w     : this.UP,
-            s     : this.UP,
-            shift : this.UP
+            a     : 0,
+            d     : 0,
+            w     : 0,
+            s     : 0,
+            shift : 0
         }
         
     },
@@ -28,38 +27,65 @@ var inputRead = cc.Node.extend({
         //console.log(this);
         switch (key) {
         case cc.KEY.a : {
-            if (this.KeyStates.a == this.UP)
+            if (this.KeyStates.a == 0)
             {
+                this.KeyStates.a = 1;
+                
+                if (this.KeyStates.shift)
+                {this.player.switchSegmentLeft();}
+                else
+                {this.player.moveLogLeft();}
                 cc.log("a");
-                this.KeyStates.a = this.DOWN;
             }
         } break; 
         case cc.KEY.s : {
-            if (this.KeyStates.s == this.UP)
+            if (this.KeyStates.shift && !this.KeyStates.s)
             {
+                this.player.switchLog(this.player.x, this.player.y - 64);
+            }
+            else
+            {
+                this.player.moveLogDown();
+            }
+            
+            if (this.KeyStates.s == 0)
+            {
+                this.KeyStates.s = 1;
                 cc.log("s");
-                this.KeyStates.s = this.DOWN;
             }
         } break;
         case cc.KEY.w : {
-            if (this.KeyStates.w == this.UP)
+            if (this.KeyStates.shift && !this.KeyStates.w)
             {
+                this.player.switchLog(this.player.x, this.player.y + 64);
+            }
+            else
+            {
+                this.player.moveLogUp();
+            }
+            
+            if (this.KeyStates.w == 0)
+            {
+                this.KeyStates.w = 1;
                 cc.log("w");
-                this.KeyStates.w = this.DOWN;
             }
         } break;
         case cc.KEY.d : {
-            if (this.KeyStates.d == this.UP)
+            if (this.KeyStates.d == 0)
             {
+                if (this.KeyStates.shift)
+                {this.player.switchSegmentRight();}
+                else
+                {this.player.moveLogRight();}
+                this.KeyStates.d = 1;
                 cc.log("d");
-                this.KeyStates.d = this.DOWN;
             }
         } break;
         case cc.KEY.shift : {
-            if (this.KeyStates.shift == this.UP)
+            if (this.KeyStates.shift == 0)
             {
-                cc.log("SHIFT");
-                this.KeyStates.shift = this.DOWN;
+                this.KeyStates.shift = 1;
+                cc.log("shift");
             }
         } break;
         default : {cc.log(key)} break;
@@ -68,24 +94,28 @@ var inputRead = cc.Node.extend({
     onKeyReleased : function (key, event) {
         switch (key) {
         case cc.KEY.a : {
-            this.KeyStates.a = this.UP;
-            cc.log("A-");
+            if (!this.KeyStates.d)
+            {this.player.normalizeLogXVel();}
+            this.KeyStates.a = 0;
+            cc.log("a-");
         } break;
         case cc.KEY.s : {
-            this.KeyStates.s = this.UP;
-            cc.log("S-");
+            this.KeyStates.s = 0;
+            cc.log("s-");
         } break;
         case cc.KEY.w : {
-            this.KeyStates.w = this.UP;
-            cc.log("W-");
+            this.KeyStates.w = 0;
+            cc.log("w-");
         } break;
         case cc.KEY.d : {
-            this.KeyStates.d = this.UP;
-            cc.log("D-");
+            if (!this.KeyStates.a)
+            {this.player.normalizeLogXVel();}
+            this.KeyStates.d = 0;
+            cc.log("d-");
         } break;
         case cc.KEY.shift : {
-            this.KeyStates.shift = this.UP;
-            cc.log("SHIFT-");
+            this.KeyStates.shift = 0;
+            cc.log("shift-");
         } break;
         default : {cc.log(key)} break;
         }

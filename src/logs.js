@@ -56,6 +56,9 @@ var LogLayer = cc.Layer.extend({
                 if (cc.rectIntersectsRect(
                         this.logs[i].getBoundingBox(),
                         this.logs[j].getBoundingBox())) {
+                    var newVelX = (this.logs[i].velX + this.logs[j].velX) /2;
+                    this.logs[i].velX = newVelX;
+                    this.logs[j].velX = newVelX;
                     var newVelY = (this.logs[i].velY + this.logs[j].velY) / 2;
                     this.logs[i].velY = newVelY;
                     this.logs[j].velY = newVelY;
