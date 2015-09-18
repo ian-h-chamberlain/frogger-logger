@@ -39,7 +39,15 @@ var inputRead = cc.Node.extend({
             }
         } break; 
         case cc.KEY.s : {
-            this.player.moveLogDown();
+            if (this.KeyStates.shift && !this.KeyStates.s)
+            {
+                this.player.switchLog(this.player.x, this.player.y - 64);
+            }
+            else
+            {
+                this.player.moveLogDown();
+            }
+            
             if (this.KeyStates.s == 0)
             {
                 this.KeyStates.s = 1;
@@ -47,7 +55,15 @@ var inputRead = cc.Node.extend({
             }
         } break;
         case cc.KEY.w : {
-            this.player.moveLogUp();
+            if (this.KeyStates.shift && !this.KeyStates.w)
+            {
+                this.player.switchLog(this.player.x, this.player.y + 64);
+            }
+            else
+            {
+                this.player.moveLogUp();
+            }
+            
             if (this.KeyStates.w == 0)
             {
                 this.KeyStates.w = 1;

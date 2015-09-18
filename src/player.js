@@ -66,13 +66,32 @@ var player = cc.Sprite.extend({
     },
     switchLog : function( JumpPositionX, JumpPositionY) {
         // loop through the logs to see if there is one that does fits our destination.
-        //for (var i = 0 ; i < this.logList.length; i++) {
-        //    var log = logList[i];
-        //    var logX  = 
-        //    var logY  = 
-        //    var logX1 = 
-        //    var logX1 = 
-        //}
+        cc.log("looking for jump");
+        for (var logIndex = 0 ; logIndex < this.logList.length; logIndex++) {
+            var log = this.logList[logIndex];
+            if ((Math.abs(log.x - JumpPositionX) < log.width/2)){
+                cc.log((Math.abs(log.y - JumpPositionY) +" < "+ log.height/2));
+            if ((Math.abs(log.y - JumpPositionY) < log.height/2))
+            {   
+                cc.log("Log in Y");
+                this.ParentLog = this.logList[logIndex];
+                this.ContactPoints = this.ParentLog.getContactPoints();
+                for (var i = 0 ; i < this.ContactPoints.length; i++)
+                {
+                    this.ContactPoints[i].x -= this.ParentLog.x;
+                    this.ContactPoints[i].y -= this.ParentLog.y;
+                }
+                if (JumpPositionX < this.x)
+                {
+                    this.ParentContactIndex = this.ContactPoints.length-1;
+                }
+                else if (JumpPositionX > this.x)
+                {
+                    this.ParentContactIndex = 0;
+                }
+                return true;
+            }}
+        }
         return false;
     }
 });
