@@ -105,10 +105,13 @@ var GameScene = cc.Scene.extend({
         // This will probably end up being multiple layers.
         var logLayer = new LogLayer();
         this.addChild(logLayer);
+        logLayer.addLog();
+        var log = logLayer.logs[0];
         
-        var Player = new player();
+        var Player = new player( log, logLayer.logs);
         var Input = new inputRead(Player);
         logLayer.addChild(Input);
+        logLayer.addChild(Player);
         
         // Environment
         var EnvLayer = new environmentLayer();
