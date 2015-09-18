@@ -17,8 +17,6 @@ var LogLayer = cc.Layer.extend({
         this.addChild(this.dn);
         this.dn.setLocalZOrder(20);
 
-        cc.PhysicsSprite();
-
         return true;
     },
 
