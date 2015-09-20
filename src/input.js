@@ -38,29 +38,29 @@ var inputRead = cc.Node.extend({
             }
         } break; 
         case cc.KEY.s : {
+            this.player.LogSetVerticalAcceleration(-this.player.standardAcceleration);
+            cc.log("s");
             if (this.KeyStates.shift && !this.KeyStates.s)
             {
                 this.player.switchLog(this.player.x, this.player.y - 64);
             }
             else
             {
-                this.player.moveLogDown();
             }
             
             if (this.KeyStates.s == 0)
             {
                 this.KeyStates.s = 1;
-                //cc.log("s");
             }
         } break;
         case cc.KEY.w : {
+            this.player.LogSetVerticalAcceleration(this.player.standardAcceleration);
             if (this.KeyStates.shift && !this.KeyStates.w)
             {
                 this.player.switchLog(this.player.x, this.player.y + 64);
             }
             else
             {
-                this.player.moveLogUp();
             }
             
             if (this.KeyStates.w == 0)
@@ -89,34 +89,53 @@ var inputRead = cc.Node.extend({
                 else if (this.KeyStates.d)
                 {this.player.switchSegmentRight()}
                 else if (this.KeyStates.w)
-                {this.player.switchSegmentUp()}
+                {this.player.switchLog(this.player.x, this.player.y + 64);}
                 else if (this.KeyStates.s)
-                {this.player.switchSegmentDown()}
-                
+                {this.player.switchLog(this.player.x, this.player.y - 64);}
             }
         } break;
-        default : {cc.log(key)} break;
+        default : {
+            //cc.log(key)
+            } break;
         }
     },
     onKeyReleased : function (key, event) {
         switch (key) {
         case cc.KEY.a : {
-            if (!this.KeyStates.d)
             {this.player.normalizeLogXVel();}
+            if (this.KeyStates.d)
+            {this.player.moveLogRight();}
             this.KeyStates.a = 0;
             //cc.log("a-");
         } break;
         case cc.KEY.s : {
             this.KeyStates.s = 0;
+            if (this.KeyStates.w)
+            {
+                this.player.LogSetVerticalAcceleration(this.player.standardAcceleration);
+            }
+            else
+            {
+                this.player.LogSetVerticalAcceleration( 0 );
+            }
             //cc.log("s-");
         } break;
         case cc.KEY.w : {
             this.KeyStates.w = 0;
+            if (this.KeyStates.s)
+            {
+                this.player.LogSetVerticalAcceleration(-this.player.standardAcceleration);
+            }
+            else
+            {
+                this.player.LogSetVerticalAcceleration( 0 );
+            }
             //cc.log("w-");
         } break;
         case cc.KEY.d : {
-            if (!this.KeyStates.a)
             {this.player.normalizeLogXVel();}
+            if (this.KeyStates.a)
+            {this.player.moveLogLeft();}
             this.KeyStates.d = 0;
             //cc.log("d-");
         } break;

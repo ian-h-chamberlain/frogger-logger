@@ -6,7 +6,8 @@ var player = cc.Sprite.extend({
         this.ParentLog.y = 375;
         this.ParentLog.velY = 0;
         
-        this.yAcceleration = .1;
+        this.standardAcceleration = .1;
+        this.yAcceleration = 0;
         this.logList = logList;
         
         this.NextFrame = "lumberjackstand";
@@ -50,6 +51,12 @@ var player = cc.Sprite.extend({
         this.x = this.ParentLog.x + this.ContactPoints[this.ParentContactIndex].x;
         this.y = this.ParentLog.y + this.ContactPoints[this.ParentContactIndex].y;
         
+        this.ParentLog.velY += this.yAcceleration;
+        if (this.ParentLog.velY > .8)
+        {this.ParentLog.velY = .8}
+        else if (this.ParentLog.velY < -.8)
+        {this.ParentLog.velY = -.8}
+        
         this.decideSpriteFrame(dt);
         
         return true;
@@ -75,16 +82,8 @@ var player = cc.Sprite.extend({
         else
         {this.switchLog(this.x + 64, this.y);}
     },
-    moveLogUp : function( ) {
-        this.ParentLog.velY += this.yAcceleration;
-        if (this.ParentLog.velY > .8)
-        {this.ParentLog.velY = .8}
-        return true;
-    },
-    moveLogDown : function( ) {
-        this.ParentLog.velY -= this.yAcceleration;
-        if (this.ParentLog.velY < -.8)
-        {this.ParentLog.velY = -.8}
+    LogSetVerticalAcceleration : function( NewAcceleration ) {
+        this.yAcceleration = NewAcceleration;
         return true;
     },
     normalizeLogXVel : function( ) {
@@ -116,9 +115,16 @@ var player = cc.Sprite.extend({
                 {
                     this.ParentContactIndex = 0;
                 }
+                else
+                {
+                    var LowX = this.ContactPoints[0].x - 32 + this.ParentLog.x;
+                    this.ParentContactIndex = Math.floor((this.x - LowX)/64);
+                }
                 return true;
             }}
         }
+        
+        cc.log ("Player Death!");
         return false;
     },
     decideSpriteFrame : function ( dt) {

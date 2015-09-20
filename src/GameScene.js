@@ -100,6 +100,10 @@ var GameScene = cc.Scene.extend({
         var blueBackground = cc.LayerColor.create( new cc.Color(0,0,196,255));
         blueBackground.setPosition(0,0);
         this.addChild(blueBackground);
+        // Environment
+        var EnvLayer = new environmentLayer();
+        EnvLayer.init();
+        this.addChild(EnvLayer);
         
         // Draw the game
         // This will probably end up being multiple layers.
@@ -111,10 +115,6 @@ var GameScene = cc.Scene.extend({
         var Player = new player( log, logLayer.logs);
         logLayer.addChild(Player);
         
-        // Environment
-        var EnvLayer = new environmentLayer();
-        EnvLayer.init();
-        this.addChild(EnvLayer);
         
         // Gui
         var GuiLayer = new guiLayer();
