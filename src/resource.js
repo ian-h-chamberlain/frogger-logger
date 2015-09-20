@@ -23,8 +23,8 @@ var res = {
     CityTest_png : "res/City.png",
     TopBank_png : "res/TopBank.png",
     City1_png : "res/TownBg1.png",
-    Saw_png : "res/saw.png"
-    
+    Saw_png : "res/saw.png",
+
     lumberjackstand_png : "res/player/man_stand.png",
     lumberjackRunDown1_png : "res/player/man_run_down_1.png",
     lumberjackRunDown2_png : "res/player/man_run_down_2.png",

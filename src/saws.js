@@ -27,11 +27,9 @@ var SawLayer = cc.Layer.extend({
         this._super();
 
         //The x at which the saws move along
-        this.sawLine = 500;
+        this.sawLine = (cc.background.width/2) - 64;
 
-        //TODO figure out why the saw isnt drawing
-
-        this.addSaw(256, 256, 0);
+        this.addSaw(this.sawLine, 0, 0);
 
     },
 
@@ -48,12 +46,6 @@ var SawLayer = cc.Layer.extend({
         newSaw.y = y_pos;
 
         newSaw.sawVelocity = velocity;
-
-        this.saws.push(newSaw);
-        cc.log("Saw Added! Bzzzzz!");
-        cc.log("Here it is!");
-        cc.log(x_pos)
-        cc.log(y_pos);
 
         this.saws.push(newSaw);
         this.addChild(this.saws[this.saws.length-1]);
@@ -93,17 +85,20 @@ var Saw = cc.Sprite.extend({
 
 
     checkHits:function() {
-        var sawboxLeft = Saw.x-(Saw.width/2);
-        var sawboxRight = Saw.x+(Saw.width/2);
-        var sawboxTop = Saw.y+(Saw.height/2);
-        var sawboxBottom = Saw.y-(Saw.height/2);
+        var sawboxLeft = this.x-(this.width/2);
+        var sawboxRight = this.x+(this.width/2);
+        var sawboxTop = this.y+(this.height/2);
+        var sawboxBottom = this.y-(this.height/2);
 
-        //TODO figure out how to access logs
-        for(var i = 0; i < LogLayer.logs.length; i++) {
-            var logboxLeft = LogLayer.logs[i].x - (LogLayer.logs[i].width / 2);
-            var logboxRight = LogLayer.logs[i].x + (LogLayer.logs[i].width / 2);
-            var logboxTop = LogLayer.logs[i].y + (LogLayer.logs[i].height / 2);
-            var logboxBottom = LogLayer.logs[i].y - (LogLayer.logs[i].height / 2);
+
+        logs = [];
+        logs = LogLayer.allLogs();
+
+        for(var i = 0; i < logs.length; i++) {
+            var logboxLeft = logs[i].x - (logs[i].width / 2);
+            var logboxRight = logs[i].x + (logs[i].width / 2);
+            var logboxTop = logs[i].y + (logs[i].height / 2);
+            var logboxBottom = logs[i].y - (logs[i].height / 2);
 
             var not_hit = false;
             not_hit = not_hit || (logboxRight<sawboxLeft);
@@ -117,17 +112,20 @@ var Saw = cc.Sprite.extend({
                 //TODO Replace the below pseudocode with actual code
                 cc.log("We have a hit!");
 
+                var score = 0;
+
+                score += logs[i].getScore();
+
                 /*
-                var score_update = LogLayer.logs[i].getScore();
-
-                if (LogLayer.logs[i].getChildByName("player name string").getName() == "player name string") {
-                    score_update += LogLayer.logs[i].getChildByName("player name string").getScore();
-                }
-                if (LogLayer.logs[i].getChildByName("beaver name string").getName() == "beaver name string") {
-                    score_update += LogLayer.logs[i].getChildByName("beaver name string").getScore();
+                if (logs[i].getChildByName("player name string").getName() == "player name string") {
+                    score += logs[i].getChildByName("player name string").getScore();
                 }
 
-                Player.updateScore(score_update);
+                if (logs[i].getChildByName("beaver name string").getName() == "beaver name string") {
+                    score += logs[i].getChildByName("beaver name string").getScore();
+                }
+
+                Player.updateScore(score);
                 */
 
             }
