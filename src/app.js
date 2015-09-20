@@ -56,6 +56,7 @@ var TeamLayer = cc.Layer.extend({
     DoTransitionToGame : function() {
         //cc.log("Ran CallBack");
         var NNextScene = new GameScene();
+        NNextScene.setScene("Level1");
         var NTransitionScene = new cc.TransitionFade(2, NNextScene, cc.Color(0,0,0,1));
         cc.director.runScene(NTransitionScene);
         return true;

@@ -24,6 +24,8 @@ var res = {
     TopBank_png : "res/TopBank.png",
     City1_png : "res/TownBg1.png",
     
+    GuiWoodPanel_png : "res/LoggerUI.png",
+    
     lumberjackstand_png : "res/player/man_stand.png",
     lumberjackRunDown1_png : "res/player/man_run_down_1.png",
     lumberjackRunDown2_png : "res/player/man_run_down_2.png",

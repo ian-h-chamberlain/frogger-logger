@@ -6,7 +6,10 @@ var player = cc.Sprite.extend({
         this.ParentLog.y = 375;
         this.ParentLog.velY = 0;
         
-        this.yAcceleration = .1;
+        this.isDead = 0 ;
+        
+        this.standardAcceleration = .1;
+        this.yAcceleration = 0;
         this.logList = logList;
         
         this.NextFrame = "lumberjackstand";
@@ -47,12 +50,19 @@ var player = cc.Sprite.extend({
         
         },
     update : function(dt) {
-        // TODO: Fix error that pops up here sometimes
-        this.x = this.ParentLog.x + this.ContactPoints[this.ParentContactIndex].x;
-        this.y = this.ParentLog.y + this.ContactPoints[this.ParentContactIndex].y;
-        
-        this.decideSpriteFrame(dt);
-        
+        if (!this.isDead)
+        {
+            this.x = this.ParentLog.x + this.ContactPoints[this.ParentContactIndex].x;
+            this.y = this.ParentLog.y + this.ContactPoints[this.ParentContactIndex].y;
+            
+            this.ParentLog.velY += this.yAcceleration;
+            if (this.ParentLog.velY > .8)
+            {this.ParentLog.velY = .8}
+            else if (this.ParentLog.velY < -.8)
+            {this.ParentLog.velY = -.8}
+            
+            this.decideSpriteFrame(dt);
+        }
         return true;
     },
     moveLogLeft : function( ) {
@@ -76,23 +86,17 @@ var player = cc.Sprite.extend({
         else
         {this.switchLog(this.x + 64, this.y);}
     },
-    moveLogUp : function( ) {
-        this.ParentLog.velY += this.yAcceleration;
-        if (this.ParentLog.velY > .8)
-        {this.ParentLog.velY = .8}
-        return true;
-    },
-    moveLogDown : function( ) {
-        this.ParentLog.velY -= this.yAcceleration;
-        if (this.ParentLog.velY < -.8)
-        {this.ParentLog.velY = -.8}
+    LogSetVerticalAcceleration : function( NewAcceleration ) {
+        this.yAcceleration = NewAcceleration;
         return true;
     },
     normalizeLogXVel : function( ) {
+        
         this.ParentLog.velX = 1.6;
         return true;
     },
     switchLog : function( JumpPositionX, JumpPositionY) {
+        
         // loop through the logs to see if there is one that does fits our destination.
         //cc.log("looking for jump");
         for (var logIndex = 0 ; logIndex < this.logList.length; logIndex++) {
@@ -117,8 +121,21 @@ var player = cc.Sprite.extend({
                 {
                     this.ParentContactIndex = 0;
                 }
+                else
+                {
+                    var LowX = this.ContactPoints[0].x - 32 + this.ParentLog.x;
+                    this.ParentContactIndex = Math.floor((this.x - LowX)/64);
+                }
                 return true;
             }}
+        }
+        
+        //Player death stuff
+        {
+            this.isDead = 1;
+            this.setOpacity( 0 );
+            cc.log ("Player Death!");
+            cc.director.popScene(cc.director.getRunningScene());
         }
         return false;
     },
