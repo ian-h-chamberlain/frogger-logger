@@ -17,11 +17,11 @@ var LogLayer = cc.Layer.extend({
         // add a drawNode for primitive drawing
         this.dn = new cc.DrawNode();
         this.addChild(this.dn);
-        this.dn.setLocalZOrder(20);
+        this.dn.setLocalZOrder(21);
 
         this.debugNode = new cc.PhysicsDebugNode(this.space);
         this.addChild(this.debugNode);
-        this.debugNode.setLocalZOrder(21);
+        this.debugNode.setLocalZOrder(20);
 
         return true;
     },
@@ -294,7 +294,8 @@ var Log = cc.Node.extend({
 
     update: function(dt) {
 
-        // TODO: use velX to change the velocity
+        this.phys.body.applyImpulse(cp.v(this.velX * this.height - this.phys.body.getVel().x,
+            this.velY * this.height - this.phys.body.getVel().y), cc.p(0,0));
 
         this.x = this.phys.body.getPos().x;
         this.y = this.phys.body.getPos().y;
