@@ -1,10 +1,12 @@
 var LogLayer = cc.Layer.extend({
     sprite:null,
 
-    ctor:function () {
+    ctor:function (space) {
         //////////////////////////////
         // 1. super init first
         this._super();
+
+        this.space = space;
 
         // an array to hold the logs
         this.logs = [];
@@ -21,6 +23,10 @@ var LogLayer = cc.Layer.extend({
     },
 
     update: function(dt) {
+
+        // run physics
+        this.space.step(dt);
+
         // spawn logs randomly
         if (Math.random() > 0.9) {
             this.addLog();
@@ -92,9 +98,9 @@ var LogLayer = cc.Layer.extend({
     addLog: function() {
         var newLog;
         if (Math.random() > 0.5)
-            newLog = new Log(3);
+            newLog = new Log(3, this.space);
         else
-            newLog = new Log(4);
+            newLog = new Log(4, this.space);
 
         for (var i=0; i<this.logs.length; i++) {
             // ensure that the new log will not overlap an existing log
@@ -115,7 +121,7 @@ var LogLayer = cc.Layer.extend({
  * LogSegment: each square of the log will be of this type
  */
 
-var LogSegment = cc.Sprite.extend({
+var LogSegment = cc.PhysicsSprite.extend({
     ctor: function(type) {
 
         this.curFrame = 0;
@@ -163,11 +169,28 @@ var LogSegment = cc.Sprite.extend({
                     new cc.SpriteFrame(res.log_right4_png, cc.rect(0, 0, 64, 64)), "log_right3");
                 break;
         }
+
+        // initialize physics shapes and stuff
+        var contentSize = this.getContentSize();
+        this.body = new cp.Body(1, cp.momentForBox(1, contentSize.width, contentSize.height));
+        this.body.setPos(cc.p(this.x, this.y));
+
+        this.shape = new cp.BoxShape(this.body, contentSize.width, contentSize.height);
+
+        this.setBody(this.body);
+
+    },
+
+    // initialize the velocity
+    initVelocity: function() {
+        this.body.applyImpulse(cp.v(this.parent.velX * this.height, this.parent.velY * this.height), 0);
     },
 
     // update - animate the log segment based on parent's velocity
     update: function(dt) {
         this.time += dt;
+
+
 
         if (this.parent.velY != 0)
             var updateTime = Math.abs(0.2 / this.parent.velY);
@@ -205,9 +228,12 @@ var LogSegment = cc.Sprite.extend({
     }
 });
 
-var Log = cc.Sprite.extend({
-    ctor: function(numSegments) {
+var Log = cc.Node.extend({
+    ctor: function(numSegments, space) {
         this._super();
+
+        this.addBodyToSpace(space);
+        this.addShapeToSpace(space);
 
         this.logLength = numSegments;
 
@@ -221,10 +247,20 @@ var Log = cc.Sprite.extend({
         segment = new LogSegment("right");
         this.addChild(segment, 0, this.logLength - 1);
 
-        // position the log segments as necessary
+        // X and Y velocity, in log-units per second
+        this.velX = 1.6;
+        this.velY = (Math.random() - 0.5);
+
+        // position the log segments as necessary and give them velocity
         for (var i=0; i<this.logLength; i++) {
-            this.getChildByTag(i).x = (i - (this.logLength - 1)/2) * 64;
+            this.getChildByTag(i).setPositionX((i - (this.logLength - 1)/2) * 64);
+            this.getChildByTag(i).initVelocity();
+            if (i > 0) {
+                 space.addConstraint(new cp.PivotJoint(this.getChildByTag(i - 1).body, this.getChildByTag(i).body, cc.p(0, 0), cc.p(0, 0)));
+            }
         }
+
+        console.log(this.getChildByTag(0).body.vx + ", " + this.getChildByTag(0).body.vy);
 
         // set this.width correctly and height
         this.width = this.logLength * 64;
@@ -232,12 +268,8 @@ var Log = cc.Sprite.extend({
 
         this.setAnchorPoint(cc.p(0, 0));
 
-        this.x = -this.width;
+        this.x = this.width;
         this.y = Math.floor((Math.random() * (cc.winSize.height - 256 - 2*this.height)) + this.height + 128);   // randomly spawn on-screen
-
-        // X and Y velocity, in log-units per second
-        this.velX = 1.6;
-        this.velY = Math.random() - 0.5;
 
         this.scheduleUpdate();
     },
@@ -262,12 +294,22 @@ var Log = cc.Sprite.extend({
 
     update: function(dt) {
 
-        // calculate where we're headed and update accordingly using the dt
-        this.x += this.velX * this.height * dt;
-        this.y += this.velY * this.height * dt;
+        // update the children
 
         for (var i=0; i<this.logLength; i++) {
             this.getChildByTag(i).update(dt);
+        }
+    },
+
+    addBodyToSpace: function(space) {
+        for (var i=0; i<this.logLength; i++) {
+            space.addBody(this.getChildByTag(i).body);
+        }
+    },
+
+    addShapeToSpace: function(space) {
+        for (var i=0; i<this.logLength; i++) {
+            space.addShape(this.getChildByTag(i).shape);
         }
     }
 });

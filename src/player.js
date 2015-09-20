@@ -43,6 +43,7 @@ var player = cc.Sprite.extend({
         
         },
     update : function(dt) {
+        // TODO: Fix error that pops up here sometimes
         this.x = this.ParentLog.x + this.ContactPoints[this.ParentContactIndex].x;
         this.y = this.ParentLog.y + this.ContactPoints[this.ParentContactIndex].y;
         

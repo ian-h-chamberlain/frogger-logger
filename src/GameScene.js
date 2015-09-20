@@ -94,8 +94,13 @@ var guiLayer = cc.Layer.extend({
 });
 
 var GameScene = cc.Scene.extend({
+    space: null,
     onEnter:function () {
         this._super();
+
+        // initialize the physics
+        this.initPhysics();
+
         // Make the level blue
         var blueBackground = cc.LayerColor.create( new cc.Color(0,0,196,255));
         blueBackground.setPosition(0,0);
@@ -103,7 +108,8 @@ var GameScene = cc.Scene.extend({
         
         // Draw the game
         // This will probably end up being multiple layers.
-        var logLayer = new LogLayer();
+
+        var logLayer = new LogLayer(this.space);
         this.addChild(logLayer);
         logLayer.addLog();
         var log = logLayer.logs[0];
@@ -120,5 +126,25 @@ var GameScene = cc.Scene.extend({
         var GuiLayer = new guiLayer();
         GuiLayer.init();
         this.addChild(GuiLayer);
+
+    },
+
+    initPhysics: function() {
+        this.space = new cp.Space();
+
+
+        // build the riverbanks
+        var bottomBank = new cp.SegmentShape(
+                this.space.staticBody,
+                cp.v(0, 128),
+                cp.v(cc.winSize.width, 128),
+                0);
+        this.space.addStaticShape(bottomBank);
+        var topBank = new cp.SegmentShape(
+                this.space.staticBody,
+                cp.v(0, cc.winSize.height - 128),
+                cp.v(cc.winSize.width, cc.winSize.height - 128),
+                0);
+        this.space.addStaticShape(topBank);
     }
 });
