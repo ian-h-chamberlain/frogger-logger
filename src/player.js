@@ -6,6 +6,8 @@ var player = cc.Sprite.extend({
         this.ParentLog.y = 375;
         this.ParentLog.velY = 0;
         
+        this.isDead = 0 ;
+        
         this.standardAcceleration = .1;
         this.yAcceleration = 0;
         this.logList = logList;
@@ -48,17 +50,19 @@ var player = cc.Sprite.extend({
         
         },
     update : function(dt) {
-        this.x = this.ParentLog.x + this.ContactPoints[this.ParentContactIndex].x;
-        this.y = this.ParentLog.y + this.ContactPoints[this.ParentContactIndex].y;
-        
-        this.ParentLog.velY += this.yAcceleration;
-        if (this.ParentLog.velY > .8)
-        {this.ParentLog.velY = .8}
-        else if (this.ParentLog.velY < -.8)
-        {this.ParentLog.velY = -.8}
-        
-        this.decideSpriteFrame(dt);
-        
+        if (!this.isDead)
+        {
+            this.x = this.ParentLog.x + this.ContactPoints[this.ParentContactIndex].x;
+            this.y = this.ParentLog.y + this.ContactPoints[this.ParentContactIndex].y;
+            
+            this.ParentLog.velY += this.yAcceleration;
+            if (this.ParentLog.velY > .8)
+            {this.ParentLog.velY = .8}
+            else if (this.ParentLog.velY < -.8)
+            {this.ParentLog.velY = -.8}
+            
+            this.decideSpriteFrame(dt);
+        }
         return true;
     },
     moveLogLeft : function( ) {
@@ -87,10 +91,12 @@ var player = cc.Sprite.extend({
         return true;
     },
     normalizeLogXVel : function( ) {
+        
         this.ParentLog.velX = 1.6;
         return true;
     },
     switchLog : function( JumpPositionX, JumpPositionY) {
+        
         // loop through the logs to see if there is one that does fits our destination.
         //cc.log("looking for jump");
         for (var logIndex = 0 ; logIndex < this.logList.length; logIndex++) {
@@ -124,7 +130,13 @@ var player = cc.Sprite.extend({
             }}
         }
         
-        cc.log ("Player Death!");
+        //Player death stuff
+        {
+            this.isDead = 1;
+            this.setOpacity( 0 );
+            cc.log ("Player Death!");
+            cc.director.popScene(cc.director.getRunningScene());
+        }
         return false;
     },
     decideSpriteFrame : function ( dt) {

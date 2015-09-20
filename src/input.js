@@ -24,6 +24,9 @@ var inputRead = cc.Node.extend({
         
     },
     onKeyPressed : function (key, event) {
+        
+        if (this.player.isDead)
+        {return true;}
         //console.log(this);
         switch (key) {
         case cc.KEY.a : {
@@ -58,9 +61,6 @@ var inputRead = cc.Node.extend({
             if (this.KeyStates.shift && !this.KeyStates.w)
             {
                 this.player.switchLog(this.player.x, this.player.y + 64);
-            }
-            else
-            {
             }
             
             if (this.KeyStates.w == 0)
@@ -100,6 +100,8 @@ var inputRead = cc.Node.extend({
         }
     },
     onKeyReleased : function (key, event) {
+        if (this.player.isDead)
+        {return true;}
         switch (key) {
         case cc.KEY.a : {
             {this.player.normalizeLogXVel();}
