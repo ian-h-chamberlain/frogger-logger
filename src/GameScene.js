@@ -133,6 +133,8 @@ var GameScene = cc.Scene.extend({
         this.space = new cp.Space();
 
         this.space.gravity = cp.v(0, 0);
+        this.space.collisionBias = 0;
+        this.space.fixedUpdateInterval = 1/120;
 
         // build the riverbanks
         var bottomBank = new cp.SegmentShape(

@@ -43,44 +43,6 @@ var LogLayer = cc.Layer.extend({
                 this.logs.splice(i, 1);
                 continue;
             }
-
-            /*
-            // check logs for hitting the bank
-
-            if (this.logs[i].y > cc.winSize.height - 128 - this.logs[i].height / 2) {
-                this.logs[i].y = cc.winSize.height - 128 - this.logs[i].height / 2;
-                this.logs[i].velY = 0;
-            }
-            if (this.logs[i].y < 128 + this.logs[i].height / 2) {
-                this.logs[i].y = 128 + this.logs[i].height / 2;
-                this.logs[i].velY = 0;
-            }
-            */
-
-            // now check against other logs
-            for (var j=0; j<this.logs.length; j++) {
-                if (i == j)
-                    continue;
-
-                var b1 = this.logs[i].getBoundingBox();
-                var b2 = this.logs[j].getBoundingBox();
-
-                // TODO: implement collision checking or use physics bodies
-
-                /*
-                if (this.logs[i].velX > 0 &&
-                        b1.x + b1.width/2 > b2.x - b2.width/2 &&
-                        b1.y + b1.height/2 < b2.y + b2.height/2 &&
-                        b1.y + b1.height/2 > b2.y - b2.height/2 &&
-                        cc.rectIntersectsRect(b1, b2)) {
-
-                    this.logs[i].x = this.logs[j].x - (b2.width/2 + b1.width/2);
-                    var newVelX = (this.logs[i].velX + this.logs[j].velX) / 2;
-                    this.logs[i].velX = newVelX;
-                    this.logs[j].velX = newVelX;
-                }
-                */
-            }
         }
 
         // draw bounding boxes and anchor points for each log, for debugging purposes
