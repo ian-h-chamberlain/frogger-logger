@@ -14,15 +14,6 @@ var LogLayer = cc.Layer.extend({
         // schedule the update function to run
         this.scheduleUpdate();
 
-        // add a drawNode for primitive drawing
-        this.dn = new cc.DrawNode();
-        this.addChild(this.dn);
-        this.dn.setLocalZOrder(21);
-
-        this.debugNode = new cc.PhysicsDebugNode(this.space);
-        this.addChild(this.debugNode);
-        this.debugNode.setLocalZOrder(20);
-
         return true;
     },
 
@@ -46,20 +37,11 @@ var LogLayer = cc.Layer.extend({
         }
 
         // draw bounding boxes and anchor points for each log, for debugging purposes
-        this.dn.clear();
         for (var i=0; i<this.logs.length; i++) {
             var start = cc.p(this.logs[i].getBoundingBox().x - this.logs[i].getBoundingBox().width / 2,
                 this.logs[i].getBoundingBox().y - this.logs[i].getBoundingBox().height / 2);
             var finish = cc.p(this.logs[i].getBoundingBox().x + this.logs[i].getBoundingBox().width / 2,
                 this.logs[i].getBoundingBox().y + this.logs[i].getBoundingBox().height / 2);
-
-            // draw the bounding box
-            this.dn.drawRect(start, finish, null, 2, cc.color(0, 255, 0, 255));
-            // draw the contact points of the log
-            for (var j=0; j < this.logs[i].getContactPoints().length; j++) {
-                this.dn.drawDot(this.logs[i].getContactPoints()[j], 5, cc.color(255, 0, 0, 255));
-            }
-            this.dn.drawDot(this.logs[i].getPosition(), 7, cc.color(255, 0, 255, 255));
         }
     },
 
