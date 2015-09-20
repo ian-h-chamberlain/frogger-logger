@@ -117,7 +117,7 @@ var level1Scene = cc.Scene.extend({
         
         // Draw the game
         // This will probably end up being multiple layers.
-        var logLayer = new LogLayer();
+        var logLayer = new LogLayer(this.space);
         this.addChild(logLayer);
         logLayer.addLog();
         var log = logLayer.logs[0];
@@ -157,7 +157,6 @@ var level2Scene = cc.Scene.extend({
         
         // Draw the game
         // This will probably end up being multiple layers.
-
         var logLayer = new LogLayer(this.space);
         this.addChild(logLayer);
         logLayer.addLog();
@@ -192,7 +191,7 @@ var level3Scene = cc.Scene.extend({
         
         // Draw the game
         // This will probably end up being multiple layers.
-        var logLayer = new LogLayer();
+        var logLayer = new LogLayer(this.space);
         this.addChild(logLayer);
         logLayer.addLog();
         var log = logLayer.logs[0];
@@ -204,7 +203,6 @@ var level3Scene = cc.Scene.extend({
         var GuiLayer = new guiLayer();
         GuiLayer.init(90, 3, 0);
         this.addChild(GuiLayer);
-
     }
 });
 
