@@ -26,9 +26,6 @@ var SawLayer = cc.Layer.extend({
         // Call super class's super function
         this._super();
 
-        //The x at which the saws move along
-        this.sawLine = (cc.background.width/2) - 64;
-
         this.addSaw(this.sawLine, 0, 0);
 
     },
@@ -63,6 +60,19 @@ var Saw = cc.Sprite.extend({
       // How fast the saw moves up and down
       var sawVelocity = 0;
 
+      var sawActive = true;
+
+      this.curFrame = 0;
+
+      this._super(res.saw_1_png);
+      cc.spriteFrameCache.addSpriteFrame(
+          new cc.SpriteFrame(res.saw_1_png, cc.rect(0, 0, 64, 64)), "saw0");
+      cc.spriteFrameCache.addSpriteFrame(
+          new cc.SpriteFrame(res.saw_2_png, cc.rect(0, 0, 64, 64)), "saw1");
+      cc.spriteFrameCache.addSpriteFrame(
+          new cc.SpriteFrame(res.saw_2_png, cc.rect(0, 0, 64, 64)), "saw2");
+
+
     },
 
     update:function(dt) {
@@ -80,7 +90,17 @@ var Saw = cc.Sprite.extend({
         this.y = new_y;
 
         // Check to see if we're hitting anything
-        this.checkHits();
+        if (this.sawActive) {
+            this.checkHits();
+            this._currentFrame++;
+            if (this.currentFrame > 2) {
+                this.currentFrame = 0;
+            }
+
+            this.setSpriteFrame("saw" + this.curFrame);
+        }
+
+
     },
 
 
