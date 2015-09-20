@@ -30,12 +30,11 @@ var inputRead = cc.Node.extend({
             if (this.KeyStates.a == 0)
             {
                 this.KeyStates.a = 1;
+                {this.player.moveLogLeft();}
                 
                 if (this.KeyStates.shift)
                 {this.player.switchSegmentLeft();}
-                else
-                {this.player.moveLogLeft();}
-                cc.log("a");
+                //cc.log("a");
             }
         } break; 
         case cc.KEY.s : {
@@ -51,7 +50,7 @@ var inputRead = cc.Node.extend({
             if (this.KeyStates.s == 0)
             {
                 this.KeyStates.s = 1;
-                cc.log("s");
+                //cc.log("s");
             }
         } break;
         case cc.KEY.w : {
@@ -67,25 +66,33 @@ var inputRead = cc.Node.extend({
             if (this.KeyStates.w == 0)
             {
                 this.KeyStates.w = 1;
-                cc.log("w");
+                //cc.log("w");
             }
         } break;
         case cc.KEY.d : {
             if (this.KeyStates.d == 0)
             {
+                {this.player.moveLogRight();}
                 if (this.KeyStates.shift)
                 {this.player.switchSegmentRight();}
-                else
-                {this.player.moveLogRight();}
                 this.KeyStates.d = 1;
-                cc.log("d");
+                //cc.log("d");
             }
         } break;
         case cc.KEY.shift : {
             if (this.KeyStates.shift == 0)
             {
                 this.KeyStates.shift = 1;
-                cc.log("shift");
+                //cc.log("shift");
+                if (this.KeyStates.a)
+                {this.player.switchSegmentLeft();}
+                else if (this.KeyStates.d)
+                {this.player.switchSegmentRight()}
+                else if (this.KeyStates.w)
+                {this.player.switchSegmentUp()}
+                else if (this.KeyStates.s)
+                {this.player.switchSegmentDown()}
+                
             }
         } break;
         default : {cc.log(key)} break;
@@ -97,27 +104,29 @@ var inputRead = cc.Node.extend({
             if (!this.KeyStates.d)
             {this.player.normalizeLogXVel();}
             this.KeyStates.a = 0;
-            cc.log("a-");
+            //cc.log("a-");
         } break;
         case cc.KEY.s : {
             this.KeyStates.s = 0;
-            cc.log("s-");
+            //cc.log("s-");
         } break;
         case cc.KEY.w : {
             this.KeyStates.w = 0;
-            cc.log("w-");
+            //cc.log("w-");
         } break;
         case cc.KEY.d : {
             if (!this.KeyStates.a)
             {this.player.normalizeLogXVel();}
             this.KeyStates.d = 0;
-            cc.log("d-");
+            //cc.log("d-");
         } break;
         case cc.KEY.shift : {
             this.KeyStates.shift = 0;
-            cc.log("shift-");
+            //cc.log("shift-");
         } break;
-        default : {cc.log(key)} break;
+        default : {
+            //cc.log(key)
+            } break;
         }
     }
 });

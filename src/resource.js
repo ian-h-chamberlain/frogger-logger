@@ -32,7 +32,9 @@ var res = {
     lumberjackRunUp1_png : "res/player/man_run_up_1.png",
     lumberjackRunUp2_png : "res/player/man_run_up_2.png",
     lumberjackRunUp3_png : "res/player/man_run_up_3.png",
-    lumberjackRunUp4_png : "res/player/man_run_up_4.png"
+    lumberjackRunUp4_png : "res/player/man_run_up_4.png",
+    lumberjackLeanLeft_png : "res/player/man_lean_left.png",
+    lumberjackLeanRight_png : "res/player/man_lean_right.png"
 };
 
 var g_resources = [];

@@ -38,6 +38,10 @@ var player = cc.Sprite.extend({
         cc.spriteFrameCache.addSpriteFrame( new cc.SpriteFrame(res.lumberjackRunUp3_png, cc.rect(0, 0, 64, 128)), "lumberjack_man_run_up_3");
         cc.spriteFrameCache.addSpriteFrame( new cc.SpriteFrame(res.lumberjackRunUp4_png, cc.rect(0, 0, 64, 128)), "lumberjack_man_run_up_4");
         
+        cc.spriteFrameCache.addSpriteFrame( new cc.SpriteFrame(res.lumberjackLeanLeft_png, cc.rect(0, 0, 64, 128)), "lumberjack_man_lean_left");
+        cc.spriteFrameCache.addSpriteFrame( new cc.SpriteFrame(res.lumberjackLeanRight_png, cc.rect(0, 0, 64, 128)), "lumberjack_man_lean_right");
+        
+        
         this.Input = new inputRead(this);
         this.addChild(this.Input);
         
@@ -146,10 +150,21 @@ var player = cc.Sprite.extend({
         }
         else
         {
-            this.NextFrame = "lumberjackstand";
+            if (this.Input.KeyStates.a)
+            {
+                this.NextFrame = "lumberjack_man_lean_left";
+            }
+            else if (this.Input.KeyStates.d)
+            {
+                this.NextFrame = "lumberjack_man_lean_right";
+            }
+            else
+            {
+                this.NextFrame = "lumberjackstand";
+            }
         }
         
-        cc.log(this.NextFrame);
+        //cc.log(this.NextFrame);
         this.setSpriteFrame(this.NextFrame);
         return true;
     }
