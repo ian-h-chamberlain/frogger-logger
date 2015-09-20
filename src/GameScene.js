@@ -132,18 +132,19 @@ var GameScene = cc.Scene.extend({
     initPhysics: function() {
         this.space = new cp.Space();
 
+        this.space.gravity = cp.v(0, 0);
 
         // build the riverbanks
         var bottomBank = new cp.SegmentShape(
                 this.space.staticBody,
-                cp.v(0, 128),
-                cp.v(cc.winSize.width, 128),
+                cp.v(0, 130),
+                cp.v(cc.winSize.width, 130),
                 0);
         this.space.addStaticShape(bottomBank);
         var topBank = new cp.SegmentShape(
                 this.space.staticBody,
-                cp.v(0, cc.winSize.height - 128),
-                cp.v(cc.winSize.width, cc.winSize.height - 128),
+                cp.v(0, cc.winSize.height - 130),
+                cp.v(cc.winSize.width, cc.winSize.height - 130),
                 0);
         this.space.addStaticShape(topBank);
     }
