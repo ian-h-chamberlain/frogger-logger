@@ -125,5 +125,11 @@ var GameScene = cc.Scene.extend({
         var sawLayer = new SawLayer(logLayer.logs);
         sawLayer.init();
         this.addChild(sawLayer);
+
+        // Beavers
+        var beaverLayer = new BeaverLayer(Player);
+        beaverLayer.init();
+        this.addChild(beaverLayer);
+        
     }
 });

@@ -35,8 +35,22 @@ var SawLayer = cc.Layer.extend({
     },
 
     update: function(dt) {
+
         for (var i=0; i<this.saws.length; i++) {
+            var new_y = this.saws[i].y + this.saws[i].sawVelocity *dt;
+
+            if (new_y >= this.sawMAX) {
+                new_y = this.sawMAX(new_y-this.sawMAX);
+            }
+
+            if (new_y <= this.sawMIN) {
+                new_y = this.sawMIN+(this.sawMIN-new_y);
+            }
+
+            this.saws[i].y = new_y;
+
             if (this.saws[i].sawActive == true) {
+                this.saws[i].y += this.saws[i].sawVelocity;
                 this.checkHits(this.saws[i]);
             }
         }
@@ -45,7 +59,7 @@ var SawLayer = cc.Layer.extend({
 
 
     addSaw:function(x_pos, y_pos, velocity) {
-        var newSaw = new Saw(res.Saw_png);
+        var newSaw = new Saw(res.saw_1_png);
 
         newSaw.x = x_pos;
         newSaw.y = y_pos;
@@ -105,10 +119,8 @@ var SawLayer = cc.Layer.extend({
 var Saw = cc.Sprite.extend({
     ctor: function(sprite) {
 
-        this._super(sprite);
-
         // How fast the saw moves up and down
-        var sawVelocity = 0;
+        this.sawVelocity = 0;
 
         this.sawActive = true;
 
@@ -127,19 +139,6 @@ var Saw = cc.Sprite.extend({
     },
 
     update:function(dt) {
-        // Move the saw as needed. Probably should have its own function
-
-        var new_y = this.y + this.sawVelocity *dt;
-
-        if (new_y >= SawLayer.sawMAX) {
-            new_y = SawLayer.sawMAX(new_y-SawLayer.sawMAX);
-        }
-
-        if (new_y <= SawLayer.sawMIN) {
-            new_y = SawLayer.sawMIN+(SawLayer.sawMIN-new_y);
-        }
-
-        this.y = new_y;
 
         if (this.sawActive == true) {;
             if (this.sinceLastFrame > 0) {
