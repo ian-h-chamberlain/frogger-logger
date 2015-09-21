@@ -195,13 +195,17 @@ var Log = cc.Node.extend({
         this.width = this.logLength * 64;
         this.height = 64;
 
+        // set the anchor point to the center
         this.setAnchorPoint(cc.p(0, 0));
 
+        // and position the log randomly offscreen to the left
         this.x = -this.width;
         this.y = Math.floor((Math.random() * (cc.winSize.height - 256 - 2*this.height)) + this.height + 128);   // randomly spawn on-screen
     },
 
+    // init - initialize physics stuff
     init: function() {
+        // make a new physics body the size of the log
         this.phys = new cc.PhysicsSprite();
         this.phys.body = new cp.Body(1, cp.momentForBox(1, this.width, this.height));
         this.phys.body.setPos(cc.p(this.x, this.y));
@@ -213,6 +217,7 @@ var Log = cc.Node.extend({
         this.space.addBody(this.phys.body);
         this.space.addShape(this.phys.shape);
 
+        // give the physics body a rightward velocity
         this.phys.body.applyImpulse(cp.v(this.velX * this.height, this.velY * this.height), cc.p(0,0));
 
         this.scheduleUpdate();
@@ -228,6 +233,7 @@ var Log = cc.Node.extend({
         return points;
     },
 
+    // returns the score for this log
     getScore: function() {
         var score = 0;
         for (var i=0; i<this.logLength; i++) {
@@ -238,12 +244,15 @@ var Log = cc.Node.extend({
 
     update: function(dt) {
 
+        // use velX and velY to change the velocity of the physics body
         this.phys.body.applyImpulse(cp.v(this.velX * this.height - this.phys.body.getVel().x,
             this.velY * this.height - this.phys.body.getVel().y), cc.p(0,0));
 
+        // position the sprite according to the physics body
         this.x = this.phys.body.getPos().x;
         this.y = this.phys.body.getPos().y;
 
+        // lock rotation to zero
         this.phys.body.setAngle(0);
 
         // update the children

@@ -48,6 +48,13 @@ var res = {
     City1_png : "res/TownBg1.png",
     City2_png : "res/TownBg2.png",
     City3_png : "res/TownBg3.png",
+
+    backgroundMusic_mp3: "res/sound/backgroundMusic.mp3",
+
+    beaver_wav: "res/sound/Beaver.wav",
+    saw_wav: "res/sound/Saw.wav",
+    sawmill_wav: "res/sound/Sawmill.wav",
+    splash_wav: "res/sound/Splash.wav"
 };
 
 var g_resources = [];

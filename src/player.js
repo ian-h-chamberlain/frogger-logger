@@ -75,6 +75,12 @@ var player = cc.Sprite.extend({
         {
             this.SplashTime += dt;
             var FrameNumber = Math.floor(this.SplashTime / (1/16)) + 1;
+
+            // play splash effect
+            if (FrameNumber == 1) {
+                cc.audioEngine.playEffect(res.splash_wav, false);
+            }
+
             if (FrameNumber <= 6)
             {
                 if (FrameNumber == 6)

@@ -150,6 +150,9 @@ var deathLayer = cc.Layer.extend({
 var levelTemplateScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
+        // play background music
+        if (!cc.audioEngine.isMusicPlaying())
+            cc.audioEngine.playMusic(res.backgroundMusic_mp3, true);
         this.Score = 0;
         this.ScoreMilestone1 = 50;
         this.ScoreMilestone2 = 100;
@@ -167,6 +170,12 @@ var levelTemplateScene = cc.Scene.extend({
     },
     playerDie : function ( ) {
         this.DeathLayer.Score = this.Score;
+        // stop bg music
+        cc.audioEngine.stopMusic();
+        // and effects
+        cc.audioEngine.stopAllEffects();
+        // play death sound
+        cc.audioEngine.playEffect(res.sawmill_wav, false);
         this.addChild(this.DeathLayer);
     },
     changeScoreBy : function ( deltaScore ) {
@@ -292,7 +301,12 @@ var level3Scene = levelTemplateScene.extend({
 
 var GameScene = cc.Scene.extend({
     onEnter:function () {
+
         this._super();
+
+        // play background music
+        cc.audioEngine.playMusic("res/sound/backgroundMusic.mp3", true);
+
         {
             this.score = 0;
             cc.log("Entered GameScene");
