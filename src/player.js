@@ -57,6 +57,7 @@ var player = cc.Sprite.extend({
         
         },
     update : function(dt) {
+
         if (!this.isDead)
         {
             this.x = this.ParentLog.x + this.ContactPoints[this.ParentContactIndex].x;

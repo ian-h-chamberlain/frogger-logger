@@ -1,10 +1,12 @@
 var LogLayer = cc.Layer.extend({
     sprite:null,
 
-    ctor:function () {
+    ctor:function (space) {
         //////////////////////////////
         // 1. super init first
         this._super();
+
+        this.space = space;
 
         // an array to hold the logs
         this.logs = [];
@@ -12,17 +14,16 @@ var LogLayer = cc.Layer.extend({
         // schedule the update function to run
         this.scheduleUpdate();
 
-        // add a drawNode for primitive drawing
-        this.dn = new cc.DrawNode();
-        this.addChild(this.dn);
-        this.dn.setLocalZOrder(20);
-
         return true;
     },
 
     update: function(dt) {
+
+        // run physics
+        this.space.step(dt);
+
         // spawn logs randomly
-        if (Math.random() > 0.9) {
+        if (Math.random() > 0.95) {
             this.addLog();
         }
 
@@ -33,58 +34,14 @@ var LogLayer = cc.Layer.extend({
                 this.logs.splice(i, 1);
                 continue;
             }
-
-            // check logs for hitting the bank
-            if (this.logs[i].y > cc.winSize.height - 128 - this.logs[i].height / 2) {
-                this.logs[i].y = cc.winSize.height - 128 - this.logs[i].height / 2;
-                this.logs[i].velY = 0;
-            }
-            if (this.logs[i].y < 128 + this.logs[i].height / 2) {
-                this.logs[i].y = 128 + this.logs[i].height / 2;
-                this.logs[i].velY = 0;
-            }
-
-            // now check against other logs
-            for (var j=0; j<this.logs.length; j++) {
-                if (i == j)
-                    continue;
-
-                var b1 = this.logs[i].getBoundingBox();
-                var b2 = this.logs[j].getBoundingBox();
-
-                // TODO: implement collision checking or use physics bodies
-
-                /*
-                if (this.logs[i].velX > 0 &&
-                        b1.x + b1.width/2 > b2.x - b2.width/2 &&
-                        b1.y + b1.height/2 < b2.y + b2.height/2 &&
-                        b1.y + b1.height/2 > b2.y - b2.height/2 &&
-                        cc.rectIntersectsRect(b1, b2)) {
-
-                    this.logs[i].x = this.logs[j].x - (b2.width/2 + b1.width/2);
-                    var newVelX = (this.logs[i].velX + this.logs[j].velX) / 2;
-                    this.logs[i].velX = newVelX;
-                    this.logs[j].velX = newVelX;
-                }
-                */
-            }
         }
 
         // draw bounding boxes and anchor points for each log, for debugging purposes
-        this.dn.clear();
         for (var i=0; i<this.logs.length; i++) {
             var start = cc.p(this.logs[i].getBoundingBox().x - this.logs[i].getBoundingBox().width / 2,
                 this.logs[i].getBoundingBox().y - this.logs[i].getBoundingBox().height / 2);
             var finish = cc.p(this.logs[i].getBoundingBox().x + this.logs[i].getBoundingBox().width / 2,
                 this.logs[i].getBoundingBox().y + this.logs[i].getBoundingBox().height / 2);
-
-            // draw the bounding box
-            this.dn.drawRect(start, finish, null, 2, cc.color(0, 255, 0, 255));
-            // draw the contact points of the log
-            for (var j=0; j < this.logs[i].getContactPoints().length; j++) {
-                this.dn.drawDot(this.logs[i].getContactPoints()[j], 5, cc.color(255, 0, 0, 255));
-            }
-            this.dn.drawDot(this.logs[i].getPosition(), 7, cc.color(255, 0, 255, 255));
         }
     },
 
@@ -92,9 +49,9 @@ var LogLayer = cc.Layer.extend({
     addLog: function() {
         var newLog;
         if (Math.random() > 0.5)
-            newLog = new Log(3);
+            newLog = new Log(3, this.space);
         else
-            newLog = new Log(4);
+            newLog = new Log(4, this.space);
 
         for (var i=0; i<this.logs.length; i++) {
             // ensure that the new log will not overlap an existing log
@@ -106,6 +63,7 @@ var LogLayer = cc.Layer.extend({
         }
 
         // actually add the log
+        newLog.init();
         this.logs.push(newLog);
         this.addChild(this.logs[this.logs.length - 1]);
     }
@@ -163,6 +121,7 @@ var LogSegment = cc.Sprite.extend({
                     new cc.SpriteFrame(res.log_right4_png, cc.rect(0, 0, 64, 64)), "log_right3");
                 break;
         }
+
     },
 
     // update - animate the log segment based on parent's velocity
@@ -205,9 +164,11 @@ var LogSegment = cc.Sprite.extend({
     }
 });
 
-var Log = cc.Sprite.extend({
-    ctor: function(numSegments) {
+var Log = cc.Node.extend({
+    ctor: function(numSegments, space) {
         this._super();
+
+        this.space = space;
 
         this.logLength = numSegments;
 
@@ -221,9 +182,13 @@ var Log = cc.Sprite.extend({
         segment = new LogSegment("right");
         this.addChild(segment, 0, this.logLength - 1);
 
+        // X and Y velocity, in log-units per second
+        this.velX = 1.6;
+        this.velY = (Math.random() - 0.5);
+
         // position the log segments as necessary
         for (var i=0; i<this.logLength; i++) {
-            this.getChildByTag(i).x = (i - (this.logLength - 1)/2) * 64;
+            this.getChildByTag(i).setPositionX((i - (this.logLength - 1)/2) * 64);
         }
 
         // set this.width correctly and height
@@ -234,10 +199,21 @@ var Log = cc.Sprite.extend({
 
         this.x = -this.width;
         this.y = Math.floor((Math.random() * (cc.winSize.height - 256 - 2*this.height)) + this.height + 128);   // randomly spawn on-screen
+    },
 
-        // X and Y velocity, in log-units per second
-        this.velX = 1.6;
-        this.velY = Math.random() - 0.5;
+    init: function() {
+        this.phys = new cc.PhysicsSprite();
+        this.phys.body = new cp.Body(1, cp.momentForBox(1, this.width, this.height));
+        this.phys.body.setPos(cc.p(this.x, this.y));
+
+        this.phys.shape = new cp.BoxShape(this.phys.body, this.width, this.height);
+
+        this.phys.setBody(this.phys.body);
+
+        this.space.addBody(this.phys.body);
+        this.space.addShape(this.phys.shape);
+
+        this.phys.body.applyImpulse(cp.v(this.velX * this.height, this.velY * this.height), cc.p(0,0));
 
         this.scheduleUpdate();
     },
@@ -262,10 +238,15 @@ var Log = cc.Sprite.extend({
 
     update: function(dt) {
 
-        // calculate where we're headed and update accordingly using the dt
-        this.x += this.velX * this.height * dt;
-        this.y += this.velY * this.height * dt;
+        this.phys.body.applyImpulse(cp.v(this.velX * this.height - this.phys.body.getVel().x,
+            this.velY * this.height - this.phys.body.getVel().y), cc.p(0,0));
 
+        this.x = this.phys.body.getPos().x;
+        this.y = this.phys.body.getPos().y;
+
+        this.phys.body.setAngle(0);
+
+        // update the children
         for (var i=0; i<this.logLength; i++) {
             this.getChildByTag(i).update(dt);
         }

@@ -164,6 +164,8 @@ var levelTemplateScene = cc.Scene.extend({
 var level1Scene = levelTemplateScene.extend({
     onEnter:function () {
         this._super();
+
+        initPhysics(this);
         
         this.initDeath();
         // Make the level blue
@@ -177,7 +179,7 @@ var level1Scene = levelTemplateScene.extend({
         
         // Draw the game
         // This will probably end up being multiple layers.
-        var logLayer = new LogLayer();
+        var logLayer = new LogLayer(this.space);
         this.addChild(logLayer);
         logLayer.addLog();
         var log = logLayer.logs[0];
@@ -196,6 +198,10 @@ var level1Scene = levelTemplateScene.extend({
 var level2Scene = levelTemplateScene.extend({
     onEnter:function () {
         this._super();
+
+        // initialize the physics
+        initPhysics(this);
+
         // Make the level blue
         var blueBackground = cc.LayerColor.create( new cc.Color(0,0,196,255));
         blueBackground.setPosition(0,0);
@@ -207,7 +213,7 @@ var level2Scene = levelTemplateScene.extend({
         
         // Draw the game
         // This will probably end up being multiple layers.
-        var logLayer = new LogLayer();
+        var logLayer = new LogLayer(this.space);
         this.addChild(logLayer);
         logLayer.addLog();
         var log = logLayer.logs[0];
@@ -225,6 +231,10 @@ var level2Scene = levelTemplateScene.extend({
 var level3Scene = levelTemplateScene.extend({
     onEnter:function () {
         this._super();
+
+        // initialize the physics
+        initPhysics(this);
+
         // Make the level blue
         var blueBackground = cc.LayerColor.create( new cc.Color(0,0,196,255));
         blueBackground.setPosition(0,0);
@@ -237,7 +247,7 @@ var level3Scene = levelTemplateScene.extend({
         
         // Draw the game
         // This will probably end up being multiple layers.
-        var logLayer = new LogLayer();
+        var logLayer = new LogLayer(this.space);
         this.addChild(logLayer);
         logLayer.addLog();
         var log = logLayer.logs[0];
@@ -295,3 +305,25 @@ var GameScene = cc.Scene.extend({
     
 });
 
+// initPhysics - initialize the physics for this scene
+initPhysics = function(scene) {
+    scene.space = new cp.Space();
+
+    scene.space.gravity = cp.v(0, 0);
+    scene.space.collisionBias = 0;
+    scene.space.fixedUpdateInterval = 1/120;
+
+    // build the riverbanks
+    var bottomBank = new cp.SegmentShape(
+        scene.space.staticBody,
+        cp.v(0, 130),
+        cp.v(cc.winSize.width, 130),
+        0);
+    scene.space.addStaticShape(bottomBank);
+    var topBank = new cp.SegmentShape(
+        scene.space.staticBody,
+        cp.v(0, cc.winSize.height - 130),
+        cp.v(cc.winSize.width, cc.winSize.height - 130),
+        0);
+    scene.space.addStaticShape(topBank);
+}
