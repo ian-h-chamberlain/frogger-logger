@@ -22,7 +22,6 @@ var res = {
     BottomBank_png : "res/BottomBank.png",
     CityTest_png : "res/City.png",
     TopBank_png : "res/TopBank.png",
-    City1_png : "res/TownBg1.png",
     
     GuiWoodPanel_png : "res/LoggerUI.png",
     
@@ -43,7 +42,12 @@ var res = {
     lumberjackSplash4_png : "res/player/splash4.png",
     lumberjackSplash5_png : "res/player/splash5.png",
     
-    pleaseStandBy_png : "res/pleasestandby.png"
+    pleaseStandBy_png : "res/pleasestandby.png",
+    pressStart_png : "res/title.png",
+    
+    City1_png : "res/TownBg1.png",
+    City2_png : "res/TownBg2.png",
+    City3_png : "res/TownBg3.png",
 };
 
 var g_resources = [];

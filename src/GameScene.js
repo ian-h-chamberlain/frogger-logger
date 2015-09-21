@@ -48,9 +48,19 @@ var environmentLayer = cc.Layer.extend({
         this.addChild( bottomBank);
         
         // The town at the top of the screen
-        var town = new cc.Sprite (res.City1_png);
-        town.setPosition (centerpos.x, winsize.height - 64);
-        this.addChild( town);
+        this.town1 = new cc.Sprite (res.City1_png);
+        this.town1.setPosition (centerpos.x, winsize.height - 64);
+        this.addChild( this.town1);
+        
+        this.town2 = new cc.Sprite (res.City2_png);
+        this.town2.setPosition (centerpos.x, winsize.height - 64);
+        this.town2.setOpacity(1);
+        this.addChild( this.town2);
+        
+        this.town3 = new cc.Sprite (res.City3_png);
+        this.town3.setPosition (centerpos.x, winsize.height - 64);
+        this.town3.setOpacity(1);
+        this.addChild( this.town3);
         
         //cc.log("Entered Play Scene");
         
@@ -141,9 +151,15 @@ var levelTemplateScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
         this.Score = 0;
+        this.ScoreMilestone1 = 50;
+        this.ScoreMilestone2 = 100;
+        this.ScoreVictory = 200;
     },
-    init : function (GameScene) {
+    init : function (GameScene, inScoreMilestone1, inScoreMilestone2, inScoreVictory) {
         this.gameScene = GameScene;
+        this.ScoreMilestone1 = inScoreMilestone1;
+        this.ScoreMilestone2 = inScoreMilestone2;
+        this.ScoreVictory = inScoreVictory;
     },
     initDeath : function () {
         this.DeathLayer = new deathLayer();
@@ -155,6 +171,16 @@ var levelTemplateScene = cc.Scene.extend({
     },
     changeScoreBy : function ( deltaScore ) {
         this.Score += deltaScore;
+        if (this.Score > this.ScoreMilestone2)
+        {
+            cc.log("city3");
+            this.EnvLayer.town3.setOpacity(255);
+        }
+        else if (this.Score > this.ScoreMilestone1)
+        {
+            cc.log("city2");
+            this.EnvLayer.town2.setOpacity(255);
+        }
     },
     acceptDeath : function () {
         cc.log("death accepted");
@@ -175,9 +201,9 @@ var level1Scene = levelTemplateScene.extend({
         blueBackground.setPosition(0,0);
         this.addChild(blueBackground);
         // Environment
-        var EnvLayer = new environmentLayer();
-        EnvLayer.init();
-        this.addChild(EnvLayer);
+        this.EnvLayer = new environmentLayer();
+        this.EnvLayer.init();
+        this.addChild(this.EnvLayer);
         
         // Draw the game
         // This will probably end up being multiple layers.
@@ -293,9 +319,9 @@ var GameScene = cc.Scene.extend({
     },
     DoTransitionToLevel1Scene : function() {
         var Scene = new level1Scene();
-        Scene.init(this);
-        var SceneTransition = new cc.TransitionFade(2, Scene, cc.Color(0,0,0,1));
-        cc.director.pushScene(SceneTransition);
+        Scene.init(this, 50, 100, 200);
+        //var SceneTransition = new cc.TransitionFade(2, Scene, cc.Color(0,0,0,1));
+        cc.director.pushScene(Scene);
         return true;
     },
     DoTransitionToMenu : function() {

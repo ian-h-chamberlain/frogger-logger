@@ -33,7 +33,7 @@ var EnterWorldScene = cc.Scene.extend({
     }
 });
 
-var TeamLayer = cc.Layer.extend({
+var StartLayer = cc.Layer.extend({
     ctor : function () {
         this._super();
     },
@@ -67,7 +67,7 @@ var LogoScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
         
-        var layer = new TeamLayer();
+        var layer = new StartLayer();
         layer.init();
         this.addChild(layer);
     }
