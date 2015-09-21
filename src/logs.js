@@ -66,7 +66,13 @@ var LogLayer = cc.Layer.extend({
         newLog.init();
         this.logs.push(newLog);
         this.addChild(this.logs[this.logs.length - 1]);
+    },
+
+    //allLogs - returns the array of all logs
+    allLogs:function () {
+        return this.logs;
     }
+
 });
 
 /**
