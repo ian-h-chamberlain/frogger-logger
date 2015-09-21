@@ -36,7 +36,14 @@ var res = {
     lumberjackRunUp3_png : "res/player/man_run_up_3.png",
     lumberjackRunUp4_png : "res/player/man_run_up_4.png",
     lumberjackLeanLeft_png : "res/player/man_lean_left.png",
-    lumberjackLeanRight_png : "res/player/man_lean_right.png"
+    lumberjackLeanRight_png : "res/player/man_lean_right.png",
+    lumberjackSplash1_png : "res/player/splash1.png",
+    lumberjackSplash2_png : "res/player/splash2.png",
+    lumberjackSplash3_png : "res/player/splash3.png",
+    lumberjackSplash4_png : "res/player/splash4.png",
+    lumberjackSplash5_png : "res/player/splash5.png",
+    
+    pleaseStandBy_png : "res/pleasestandby.png"
 };
 
 var g_resources = [];

@@ -1,6 +1,8 @@
 var inputRead = cc.Node.extend({
-    ctor : function ( player) {
+    ctor : function ( inplayer) {
         this._super();
+        this.player = inplayer;
+        
         if (cc.sys.capabilities.hasOwnProperty('keyboard'))
         {
             cc.eventManager.addListener(
@@ -12,7 +14,6 @@ var inputRead = cc.Node.extend({
             this );
         }
         
-        this.player = player;
         
         this.KeyStates = {
             a     : 0,
@@ -26,7 +27,14 @@ var inputRead = cc.Node.extend({
     onKeyPressed : function (key, event) {
         
         if (this.player.isDead)
-        {return true;}
+        {
+            if (key == cc.KEY.enter ) {
+                //cc.log("word");
+                cc.log("death acceptance call");
+                cc.director.getRunningScene().acceptDeath();
+            }
+            return true;
+        }
         //console.log(this);
         switch (key) {
         case cc.KEY.a : {
@@ -94,6 +102,7 @@ var inputRead = cc.Node.extend({
                 {this.player.switchLog(this.player.x, this.player.y - 64);}
             }
         } break;
+        
         default : {
             //cc.log(key)
             } break;
