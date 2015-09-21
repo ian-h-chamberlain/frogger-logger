@@ -349,6 +349,17 @@ var level3Scene = levelTemplateScene.extend({
         var GuiLayer = new guiLayer();
         GuiLayer.init(90, 3, 0, this);
         this.addChild(GuiLayer);
+
+        // Saws
+        var sawLayer = new SawLayer(logLayer.logs);
+        sawLayer.init();
+        this.addChild(sawLayer);
+
+        // Beavers
+        var beaverLayer = new BeaverLayer(Player);
+        beaverLayer.init();
+        this.addChild(beaverLayer);
+        
     }
 });
 

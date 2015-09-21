@@ -218,7 +218,7 @@ var player = cc.Sprite.extend({
                 this.NextFrame = "lumberjackstand";
             }
         }
-        
+
         this.setSpriteFrame(this.NextFrame);
         return true;
     }
