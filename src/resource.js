@@ -54,7 +54,17 @@ var res = {
     beaver_wav: "res/sound/Beaver.wav",
     saw_wav: "res/sound/Saw.wav",
     sawmill_wav: "res/sound/Sawmill.wav",
-    splash_wav: "res/sound/Splash.wav"
+    splash_wav: "res/sound/Splash.wav",
+
+    water1_png: "res/water/water1.png",
+    water2_png: "res/water/water2.png",
+    water3_png: "res/water/water3.png",
+    water4_png: "res/water/water4.png",
+    water5_png: "res/water/water5.png",
+    water6_png: "res/water/water6.png",
+    water7_png: "res/water/water7.png",
+    water8_png: "res/water/water8.png",
+    water9_png: "res/water/water9.png"
 };
 
 var g_resources = [];
