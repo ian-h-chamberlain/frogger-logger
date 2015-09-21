@@ -28,6 +28,43 @@ var environmentLayer = cc.Layer.extend({
         // We need this for placement information.
         var winsize = cc.director.getWinSize();
         var centerpos = cc.p(winsize.width / 2, winsize.height / 2);
+
+        // tiled water background
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.water1_png, cc.rect(0, 0, 64, 64)), "water1");
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.water2_png, cc.rect(0, 0, 64, 64)), "water2");
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.water3_png, cc.rect(0, 0, 64, 64)), "water3");
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.water4_png, cc.rect(0, 0, 64, 64)), "water4");
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.water5_png, cc.rect(0, 0, 64, 64)), "water5");
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.water6_png, cc.rect(0, 0, 64, 64)), "water6");
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.water7_png, cc.rect(0, 0, 64, 64)), "water7");
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.water8_png, cc.rect(0, 0, 64, 64)), "water8");
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.water9_png, cc.rect(0, 0, 64, 64)), "water9");
+
+        this.waterTiles = new cc.Node();
+        this.waterTiles.lastUpdate = 0;
+        this.waterTiles.time = 0;
+        this.addChild(this.waterTiles);
+
+        // add the tiles
+        for (var i=0; i <= winsize.width + 64 ; i += 64) {
+            for (var j=64; j < winsize.height - 64; j += 64) {
+                var waterTile = new cc.Sprite();
+                waterTile.setSpriteFrame("water1");
+                waterTile.setPosition(i, j);
+                this.waterTiles.addChild(waterTile, -1, 1);
+            }
+        }
+
+        this.scheduleUpdate();
         
         // The river's bank at the top of the screen.
         var topBank = new cc.Sprite ( res.TopBank_png);
@@ -55,6 +92,21 @@ var environmentLayer = cc.Layer.extend({
         //cc.log("Entered Play Scene");
         
         return true;
+    },
+
+    // update the water tile animations
+    update: function(dt) {
+        this.waterTiles.time += dt;
+        if (this.waterTiles.time - this.waterTiles.lastUpdate >= 0.02) {
+            this.waterTiles.lastUpdate = this.waterTiles.time;
+            for (var i = 0; i < this.waterTiles.getChildrenCount(); i++) {
+                var frameNo = this.waterTiles.getChildren()[i].getTag() + 1;
+                if (frameNo > 9)
+                    frameNo = 1;
+                this.waterTiles.getChildren()[i].setSpriteFrame("water" + frameNo);
+                this.waterTiles.getChildren()[i].setTag(frameNo);
+            }
+        }
     }
 });
 
@@ -179,10 +231,11 @@ var level1Scene = levelTemplateScene.extend({
         initPhysics(this);
         
         this.initDeath();
-        // Make the level blue
+        /* Make the level blue
         var blueBackground = cc.LayerColor.create( new cc.Color(0,0,196,255));
         blueBackground.setPosition(0,0);
         this.addChild(blueBackground);
+        */
         // Environment
         var EnvLayer = new environmentLayer();
         EnvLayer.init();
