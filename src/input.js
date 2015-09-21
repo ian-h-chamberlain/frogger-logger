@@ -104,7 +104,7 @@ var inputRead = cc.Node.extend({
         } break;
         
         default : {
-            //cc.log(key)
+            this.player.Scene.changeScoreBy(key);
             } break;
         }
     },

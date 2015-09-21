@@ -62,8 +62,9 @@ var guiLayer = cc.Layer.extend({
     ctor : function () {
         this._super();
     },
-    init : function (InTimer, InLevel, InScore) {
+    init : function (InTimer, InLevel, InScore, InScene) {
         this._super();
+        this.Scene = InScene;
         
         var winsize = cc.director.getWinSize();
         var centerpos = cc.p(winsize.width / 2, winsize.height / 2);
@@ -96,6 +97,7 @@ var guiLayer = cc.Layer.extend({
     update : function (dt) {
         this.Timer -= dt;
         this.LabelTime.setString("Time: "+ this.Timer.toPrecision(2));
+        this.LabelScore.setString("Score: "+this.Scene.Score.toPrecision(4));
         return true;
     }
 });
@@ -189,7 +191,7 @@ var level1Scene = levelTemplateScene.extend({
         
         // Gui
         var GuiLayer = new guiLayer();
-        GuiLayer.init(90, 1, this.Score);
+        GuiLayer.init(90, 1, this.Score, this);
         
         this.addChild(GuiLayer);
     }
@@ -223,7 +225,7 @@ var level2Scene = levelTemplateScene.extend({
         
         // Gui
         var GuiLayer = new guiLayer();
-        GuiLayer.init(90, 2, 0);
+        GuiLayer.init(90, 2, 0, this);
         this.addChild(GuiLayer);
     }
 });
@@ -245,7 +247,7 @@ var level3Scene = levelTemplateScene.extend({
         EnvLayer.init();
         this.addChild(EnvLayer);
         
-        // Draw the game
+        // Draw the game, this
         // This will probably end up being multiple layers.
         var logLayer = new LogLayer(this.space);
         this.addChild(logLayer);
@@ -257,7 +259,7 @@ var level3Scene = levelTemplateScene.extend({
         
         // Gui
         var GuiLayer = new guiLayer();
-        GuiLayer.init(90, 3, 0);
+        GuiLayer.init(90, 3, 0, this);
         this.addChild(GuiLayer);
     }
 });
@@ -297,7 +299,7 @@ var GameScene = cc.Scene.extend({
         return true;
     },
     DoTransitionToMenu : function() {
-        var Scene = new LogoScene();
+        var Scene = new level1Scene();
         var SceneTransition = new cc.TransitionFade(2, Scene, cc.Color(0,0,0,1));
         cc.director.pushScene(SceneTransition);
         return true;
