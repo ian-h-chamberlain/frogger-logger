@@ -132,24 +132,24 @@ var guiLayer = cc.Layer.extend({
         var centerpos = cc.p(winsize.width / 2, winsize.height / 2);
         
         this.Timer = InTimer;
-        this.LabelTime = new cc.LabelTTF("Time: "+ this.Timer.toPrecision(2), "Arial", 32, new cc.Size(256, 64));
-        this.LabelTime.setHorizontalAlignment( cc.TEXT_ALIGN_LEFT);
-        this.LabelTime.setPosition( cc.p( 128, winsize.height - 48));
-        this.LabelTime.setColor( new cc.Color(0,0,0));
+        this.LabelTime = new cc.LabelTTF("Time: "+ this.Timer.toFixed(2), "ArcadeClassic", 42, new cc.Size(192, 64));
+        this.LabelTime.setHorizontalAlignment( cc.TEXT_ALIGNMENT_CENTER);
+        this.LabelTime.setPosition( cc.p( 96, winsize.height - 42));
+        this.LabelTime.setColor( new cc.Color(216,216,216));
         this.addChild( this.LabelTime);
         
         this.Level = InLevel;
-        this.LabelLevel = new cc.LabelTTF("Level: "+this.Level, "Arial", 32, new cc.Size(256, 64));
-        this.LabelLevel.setHorizontalAlignment( cc.TEXT_ALIGN_LEFT);
-        this.LabelLevel.setPosition( cc.p( 128, winsize.height - 80));
-        this.LabelLevel.setColor( new cc.Color(0,0,0));
+        this.LabelLevel = new cc.LabelTTF("Level: "+this.Level, "ArcadeClassic", 42, new cc.Size(192, 64));
+        this.LabelLevel.setHorizontalAlignment( cc.TEXT_ALIGNMENT_CENTER);
+        this.LabelLevel.setPosition( cc.p( 96, winsize.height - 85));
+        this.LabelLevel.setColor( new cc.Color(216,216,216));
         this.addChild( this.LabelLevel);
         
         this.Score = InScore;
-        this.LabelScore = new cc.LabelTTF( "Score: "+this.Score, "Arial", 32, new cc.Size( 196, 64));
-        this.LabelScore.setHorizontalAlignment( cc.TEXT_ALIGN_RIGHT);
-        this.LabelScore.setPosition(cc.p( winsize.width - 196/2, winsize.height - 80));
-        this.LabelScore.setColor( new cc.Color( 0, 0, 0));
+        this.LabelScore = new cc.LabelTTF( "Score:\n"+this.Score.toFixed(0), "ArcadeClassic", 42, new cc.Size(192, 128));
+        this.LabelScore.setHorizontalAlignment( cc.TEXT_ALIGNMENT_CENTER);
+        this.LabelScore.setPosition(cc.p( winsize.width - 96, winsize.height - 85));
+        this.LabelScore.setColor( new cc.Color(216,216,216));
         this.addChild( this.LabelScore);
         
         this.scheduleUpdate();
@@ -158,8 +158,8 @@ var guiLayer = cc.Layer.extend({
     },
     update : function (dt) {
         this.Timer -= dt;
-        this.LabelTime.setString("Time: "+ this.Timer.toPrecision(2));
-        this.LabelScore.setString("Score: "+this.Scene.Score.toPrecision(4));
+        this.LabelTime.setString("Time: "+ this.Timer.toFixed());
+        this.LabelScore.setString("Score:\n"+this.Scene.Score.toFixed());
         return true;
     }
 });
@@ -185,16 +185,22 @@ var deathLayer = cc.Layer.extend({
     },
     score : function ( ) {
         this.img.setOpacity(0);
-        this.LabelEnter = new cc.LabelTTF( "HIT ENTER", "Arial", 32, new cc.Size( 196, 64));
-        this.LabelEnter.setHorizontalAlignment( cc.TEXT_ALIGN_CENTER);
+        this.LabelEnter = new cc.LabelTTF( "HIT ENTER", "ArcadeClassic", 42, new cc.Size( 192, 128));
+        this.LabelEnter.setHorizontalAlignment( cc.TEXT_ALIGNMENT_CENTER);
         this.LabelEnter.setPosition(cc.p( this.winsize.width/2, this.winsize.height/2 - 64));
-        this.LabelEnter.setColor( new cc.Color( 0, 0, 0));
+        this.LabelEnter.setColor( new cc.Color(216,216,216));
         this.addChild( this.LabelEnter);
+
+        this.LabelerScore = new cc.LabelTTF("SCORE:", "ArcadeClassic", 42, new cc.size(192, 128));
+        this.LabelerScore.setHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);
+        this.LabelerScore.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2 + 64));
+        this.LabelerScore.setColor(new cc.Color(216, 216, 216));
+        this.addChild(this.LabelerScore);
         
-        this.LabelScore = new cc.LabelTTF( "SCORE: "+this.Score, "Arial", 32, new cc.Size( 196, 64));
-        this.LabelScore.setHorizontalAlignment( cc.TEXT_ALIGN_CENTER);
+        this.LabelScore = new cc.LabelTTF(this.Score.toFixed(), "ArcadeClassic", 42, new cc.Size( 192, 128));
+        this.LabelScore.setHorizontalAlignment( cc.TEXT_ALIGNMENT_CENTER);
         this.LabelScore.setPosition(cc.p( this.winsize.width/2, this.winsize.height/2));
-        this.LabelScore.setColor( new cc.Color( 0, 0, 0));
+        this.LabelScore.setColor( new cc.Color(216,216,216));
         this.addChild( this.LabelScore);
     }
 });

@@ -64,7 +64,9 @@ var res = {
     water6_png: "res/water/water6.png",
     water7_png: "res/water/water7.png",
     water8_png: "res/water/water8.png",
-    water9_png: "res/water/water9.png"
+    water9_png: "res/water/water9.png",
+
+    arcadeclassic_ttf: "res/font/ArcadeClassic.ttf"
 };
 
 var g_resources = [];
