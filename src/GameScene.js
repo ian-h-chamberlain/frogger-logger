@@ -122,7 +122,7 @@ var GameScene = cc.Scene.extend({
         this.addChild(GuiLayer);
 
         // Saws
-        var sawLayer = new SawLayer();
+        var sawLayer = new SawLayer(logLayer.logs);
         sawLayer.init();
         this.addChild(sawLayer);
     }

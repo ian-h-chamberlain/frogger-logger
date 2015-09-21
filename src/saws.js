@@ -1,12 +1,15 @@
 var SawLayer = cc.Layer.extend({
     sprite:null,
 
-    ctor:function () {
+    ctor:function (logList) {
         // Call super classes ctor function
         this._super();
 
         //an array to hold current saws
         this.saws = [];
+
+        //an array of the logs
+        this.logs = logList;
 
         //The x at which the saws move long
         this.sawLine = cc.winSize.width - (Saw.width/2);
@@ -16,7 +19,7 @@ var SawLayer = cc.Layer.extend({
 
         this.setLocalZOrder(10);
 
-        cc.log("SawLayer Activated!");
+        this.scheduleUpdate();
 
         return true;
 
@@ -26,12 +29,17 @@ var SawLayer = cc.Layer.extend({
         // Call super class's super function
         this._super();
 
-        this.addSaw(this.sawLine, 0, 0);
+        // TODO: Put the saw in the correct place
+        this.addSaw(256, 256, 0);
 
     },
 
     update: function(dt) {
-
+        for (var i=0; i<this.saws.length; i++) {
+            if (this.saws[i].sawActive == true) {
+                this.checkHits(this.saws[i]);
+            }
+        }
 
     },
 
@@ -47,78 +55,19 @@ var SawLayer = cc.Layer.extend({
         this.saws.push(newSaw);
         this.addChild(this.saws[this.saws.length-1]);
 
-    }
-
-
-});
-
-var Saw = cc.Sprite.extend({
-    ctor: function(sprite) {
-
-      this._super(sprite);
-
-      // How fast the saw moves up and down
-      var sawVelocity = 0;
-
-      var sawActive = true;
-
-      this.curFrame = 0;
-
-      this._super(res.saw_1_png);
-      cc.spriteFrameCache.addSpriteFrame(
-          new cc.SpriteFrame(res.saw_1_png, cc.rect(0, 0, 64, 64)), "saw0");
-      cc.spriteFrameCache.addSpriteFrame(
-          new cc.SpriteFrame(res.saw_2_png, cc.rect(0, 0, 64, 64)), "saw1");
-      cc.spriteFrameCache.addSpriteFrame(
-          new cc.SpriteFrame(res.saw_2_png, cc.rect(0, 0, 64, 64)), "saw2");
-
-
     },
 
-    update:function(dt) {
-        // Move the saw as needed. Probably should have its own function
-        var new_y = this.y + this.sawVelocity *dt;
-
-        if (new_y >= SawLayer.sawMAX) {
-            new_y = SawLayer.sawMAX(new_y-SawLayer.sawMAX);
-        }
-
-        if (new_y <= SawLayer.sawMIN) {
-            new_y = SawLayer.sawMIN+(SawLayer.sawMIN-new_y);
-        }
-
-        this.y = new_y;
-
-        // Check to see if we're hitting anything
-        if (this.sawActive) {
-            this.checkHits();
-            this._currentFrame++;
-            if (this.currentFrame > 2) {
-                this.currentFrame = 0;
-            }
-
-            this.setSpriteFrame("saw" + this.curFrame);
-        }
-
-
-    },
-
-
-    checkHits:function() {
-        var sawboxLeft = this.x-(this.width/2);
-        var sawboxRight = this.x+(this.width/2);
-        var sawboxTop = this.y+(this.height/2);
-        var sawboxBottom = this.y-(this.height/2);
-
-
-        logs = [];
-        logs = LogLayer.allLogs();
-
-        for(var i = 0; i < logs.length; i++) {
-            var logboxLeft = logs[i].x - (logs[i].width / 2);
-            var logboxRight = logs[i].x + (logs[i].width / 2);
-            var logboxTop = logs[i].y + (logs[i].height / 2);
-            var logboxBottom = logs[i].y - (logs[i].height / 2);
+    checkHits:function(x) {
+        var saw = x;
+        var sawboxLeft = saw.x-(saw.width/2);
+        var sawboxRight = saw.x+(saw.width/2);
+        var sawboxTop = saw.y+(saw.height/2);
+        var sawboxBottom = saw.y-(saw.height/2);
+        for(var i = 0; i < this.logs.length; i++) {
+            var logboxLeft = this.logs[i].x - (this.logs[i].width / 2);
+            var logboxRight = this.logs[i].x + (this.logs[i].width / 2);
+            var logboxTop = this.logs[i].y + (this.logs[i].height / 2);
+            var logboxBottom = this.logs[i].y - (this.logs[i].height / 2);
 
             var not_hit = false;
             not_hit = not_hit || (logboxRight<sawboxLeft);
@@ -134,23 +83,80 @@ var Saw = cc.Sprite.extend({
 
                 var score = 0;
 
-                score += logs[i].getScore();
+                score += this.logs[i].getScore();
 
-                /*
-                if (logs[i].getChildByName("player name string").getName() == "player name string") {
-                    score += logs[i].getChildByName("player name string").getScore();
+                if (this.logs[i].getChildByName("player name string") != null) {
+                    score += this.logs[i].getChildByName("player name string").getScore();
+                }
+                if (this.logs[i].getChildByName("beaver name string") != null) {
+                    score += this.logs[i].getChildByName("beaver name string").getScore();
                 }
 
-                if (logs[i].getChildByName("beaver name string").getName() == "beaver name string") {
-                    score += logs[i].getChildByName("beaver name string").getScore();
-                }
+                //Todo update player's score
 
-                Player.updateScore(score);
-                */
+                }
 
             }
+    }
 
+
+});
+
+var Saw = cc.Sprite.extend({
+    ctor: function(sprite) {
+
+        this._super(sprite);
+
+        // How fast the saw moves up and down
+        var sawVelocity = 0;
+
+        this.sawActive = true;
+
+        this.curFrame = 0;
+        this.sinceLastFrame = 0;
+
+        this._super(res.saw_1_png);
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.saw_1_png, cc.rect(0, 0, 64, 64)), "saw0");
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.saw_2_png, cc.rect(0, 0, 64, 64)), "saw1");
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.saw_2_png, cc.rect(0, 0, 64, 64)), "saw2");
+
+        this.scheduleUpdate();
+    },
+
+    update:function(dt) {
+        // Move the saw as needed. Probably should have its own function
+
+        var new_y = this.y + this.sawVelocity *dt;
+
+        if (new_y >= SawLayer.sawMAX) {
+            new_y = SawLayer.sawMAX(new_y-SawLayer.sawMAX);
         }
+
+        if (new_y <= SawLayer.sawMIN) {
+            new_y = SawLayer.sawMIN+(SawLayer.sawMIN-new_y);
+        }
+
+        this.y = new_y;
+
+        if (this.sawActive == true) {;
+            if (this.sinceLastFrame > 0) {
+                this.curFrame++;
+                if (this.curFrame > 2) {
+                    this.curFrame = 0;
+                }
+                this.sinceLastFrame = 0;
+            }
+            else{
+                this.sinceLastFrame += dt;
+            }
+        }
+
+        this.setSpriteFrame("saw" + this.curFrame);
+
+
     }
 
 });
