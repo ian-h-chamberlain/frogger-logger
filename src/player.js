@@ -1,16 +1,17 @@
 var player = cc.Sprite.extend({
-    ctor : function( parent, logList) {
-//  ctor : function( parent) {
+    ctor : function( inparent, inlogList, inScene) {
         this._super(res.lumberjackstand_png);
-        this.ParentLog = parent;
+        this.ParentLog = inparent;
+        this.logList = inlogList;
+        this.Scene = inScene;
         this.ParentLog.y = 375;
         this.ParentLog.velY = 0;
         
         this.isDead = 0 ;
+        this.wentToDeathScreen = 0;
         
         this.standardAcceleration = .1;
         this.yAcceleration = 0;
-        this.logList = logList;
         
         this.NextFrame = "lumberjackstand";
         this.curFrame = 0;
@@ -44,6 +45,12 @@ var player = cc.Sprite.extend({
         cc.spriteFrameCache.addSpriteFrame( new cc.SpriteFrame(res.lumberjackLeanLeft_png, cc.rect(0, 0, 64, 128)), "lumberjack_man_lean_left");
         cc.spriteFrameCache.addSpriteFrame( new cc.SpriteFrame(res.lumberjackLeanRight_png, cc.rect(0, 0, 64, 128)), "lumberjack_man_lean_right");
         
+        this.SplashTime = 0;
+        cc.spriteFrameCache.addSpriteFrame( new cc.SpriteFrame(res.lumberjackSplash1_png, cc.rect(0, 0, 64, 128)), "lumberjack_Splash_1");
+        cc.spriteFrameCache.addSpriteFrame( new cc.SpriteFrame(res.lumberjackSplash2_png, cc.rect(0, 0, 64, 128)), "lumberjack_Splash_2");
+        cc.spriteFrameCache.addSpriteFrame( new cc.SpriteFrame(res.lumberjackSplash3_png, cc.rect(0, 0, 64, 128)), "lumberjack_Splash_3");
+        cc.spriteFrameCache.addSpriteFrame( new cc.SpriteFrame(res.lumberjackSplash4_png, cc.rect(0, 0, 64, 128)), "lumberjack_Splash_4");
+        cc.spriteFrameCache.addSpriteFrame( new cc.SpriteFrame(res.lumberjackSplash5_png, cc.rect(0, 0, 64, 128)), "lumberjack_Splash_5");
         
         this.Input = new inputRead(this);
         this.addChild(this.Input);
@@ -63,6 +70,29 @@ var player = cc.Sprite.extend({
             {this.ParentLog.velY = -.8}
             
             this.decideSpriteFrame(dt);
+        }
+        else
+        {
+            this.SplashTime += dt;
+            var FrameNumber = Math.floor(this.SplashTime / (1/16)) + 1;
+            if (FrameNumber <= 6)
+            {
+                if (FrameNumber == 6)
+                {
+                    if (!this.wentToDeathScreen)
+                    {
+                        this.setOpacity(0);
+                        //cc.log("death screen");
+                        this.Scene.playerDie();
+                        this.wentToDeathScreen = 1;
+                    }
+                }
+                else
+                {
+                    var NextFrame = "lumberjack_Splash_" + FrameNumber;
+                    this.setSpriteFrame(NextFrame);
+                }
+            }
         }
         return true;
     },
@@ -107,6 +137,7 @@ var player = cc.Sprite.extend({
             if ((Math.abs(log.y - JumpPositionY) < log.height/2))
             {   
                 //cc.log("Log in Y");
+                this.normalizeLogXVel();
                 this.ParentLog = this.logList[logIndex];
                 this.ContactPoints = this.ParentLog.getContactPoints();
                 for (var i = 0 ; i < this.ContactPoints.length; i++)
@@ -133,10 +164,10 @@ var player = cc.Sprite.extend({
         
         //Player death stuff
         {
+            this.x = JumpPositionX;
+            this.y = JumpPositionY;
+            
             this.isDead = 1;
-            this.setOpacity( 0 );
-            cc.log ("Player Death!");
-            cc.director.popScene(cc.director.getRunningScene());
         }
         return false;
     },
@@ -182,7 +213,6 @@ var player = cc.Sprite.extend({
             }
         }
         
-        //cc.log(this.NextFrame);
         this.setSpriteFrame(this.NextFrame);
         return true;
     }

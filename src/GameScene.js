@@ -100,12 +100,74 @@ var guiLayer = cc.Layer.extend({
     }
 });
 
-var level1Scene = cc.Scene.extend({
+var deathLayer = cc.Layer.extend({
+    ctor:function() {
+        this._super();
+    },
+    init:function(){
+        this._super();
+        
+        this.winsize = cc.director.getWinSize();
+        this.centerpos = cc.p(this.winsize.width / 2, this.winsize.height / 2);
+        
+        this.img = new cc.Sprite ( res.pleaseStandBy_png);
+        this.img.setPosition(this.centerpos);
+        this.addChild( this.img);
+        
+        this.scheduleOnce(this.score, 2);
+        this.Score = 0;
+        
+        return true;
+    },
+    score : function ( ) {
+        this.img.setOpacity(0);
+        this.LabelEnter = new cc.LabelTTF( "HIT ENTER", "Arial", 32, new cc.Size( 196, 64));
+        this.LabelEnter.setHorizontalAlignment( cc.TEXT_ALIGN_CENTER);
+        this.LabelEnter.setPosition(cc.p( this.winsize.width/2, this.winsize.height/2 - 64));
+        this.LabelEnter.setColor( new cc.Color( 0, 0, 0));
+        this.addChild( this.LabelEnter);
+        
+        this.LabelScore = new cc.LabelTTF( "SCORE: "+this.Score, "Arial", 32, new cc.Size( 196, 64));
+        this.LabelScore.setHorizontalAlignment( cc.TEXT_ALIGN_CENTER);
+        this.LabelScore.setPosition(cc.p( this.winsize.width/2, this.winsize.height/2));
+        this.LabelScore.setColor( new cc.Color( 0, 0, 0));
+        this.addChild( this.LabelScore);
+    }
+});
+
+var levelTemplateScene = cc.Scene.extend({
+    onEnter:function () {
+        this._super();
+        this.Score = 0;
+    },
+    init : function (GameScene) {
+        this.gameScene = GameScene;
+    },
+    initDeath : function () {
+        this.DeathLayer = new deathLayer();
+        this.DeathLayer.init();
+    },
+    playerDie : function ( ) {
+        this.DeathLayer.Score = this.Score;
+        this.addChild(this.DeathLayer);
+    },
+    changeScoreBy : function ( deltaScore ) {
+        this.Score += deltaScore;
+    },
+    acceptDeath : function () {
+        cc.log("death accepted");
+        this.gameScene.setScene("Menu");
+        cc.director.popScene();
+    }
+});
+
+var level1Scene = levelTemplateScene.extend({
     onEnter:function () {
         this._super();
 
         initPhysics(this);
         
+        this.initDeath();
         // Make the level blue
         var blueBackground = cc.LayerColor.create( new cc.Color(0,0,196,255));
         blueBackground.setPosition(0,0);
@@ -122,24 +184,18 @@ var level1Scene = cc.Scene.extend({
         logLayer.addLog();
         var log = logLayer.logs[0];
         
-        var Player = new player( log, logLayer.logs);
+        var Player = new player( log, logLayer.logs, this);
         logLayer.addChild(Player);
         
         // Gui
         var GuiLayer = new guiLayer();
-        GuiLayer.init(90, 1, 0);
+        GuiLayer.init(90, 1, this.Score);
+        
         this.addChild(GuiLayer);
-    },
-    init : function (GameScene) {
-        this.gameScene = GameScene;
-    },
-    leaveLevel : function (){
-        this.gameScene.setScene("Menu");
-        cc.director.popScene();
     }
 });
 
-var level2Scene = cc.Scene.extend({
+var level2Scene = levelTemplateScene.extend({
     onEnter:function () {
         this._super();
 
@@ -172,7 +228,7 @@ var level2Scene = cc.Scene.extend({
     }
 });
 
-var level3Scene = cc.Scene.extend({
+var level3Scene = levelTemplateScene.extend({
     onEnter:function () {
         this._super();
 
@@ -210,6 +266,7 @@ var GameScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
         {
+            this.score = 0;
             cc.log("Entered GameScene");
             
             switch (this.goToScene) {
@@ -219,16 +276,7 @@ var GameScene = cc.Scene.extend({
                 case ("Level1") : {
                     this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
                 } break;
-                case ("Level1EndScreen") : {
-                    //this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
-                } break;
                 case ("Level2") : {
-                    //this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
-                } break;
-                case ("Level2EndScreen") : {
-                    //this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
-                } break;
-                case ("Level3") : {
                     //this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
                 } break;
                 case ("Level3") : {
@@ -236,14 +284,6 @@ var GameScene = cc.Scene.extend({
                 } break;
                 default : {} break;
             }
-            
-            //var Level2Scene = new level2Scene();
-            //var Level2SceneTransition = new cc.TransitionFade(2, Level2Scene, cc.Color(0,0,0,1));
-            //cc.director.pushScene(Level2SceneTransition);
-            //
-            //var Level3Scene = new level3Scene();
-            //var Level3SceneTransition = new cc.TransitionFade(2, Level3Scene, cc.Color(0,0,0,1));
-            //cc.director.pushScene(Level3SceneTransition);
         }
     },
     setScene : function (string) {
@@ -262,6 +302,7 @@ var GameScene = cc.Scene.extend({
         cc.director.pushScene(SceneTransition);
         return true;
     }
+    
 });
 
 // initPhysics - initialize the physics for this scene
