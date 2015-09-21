@@ -12,10 +12,10 @@ var SawLayer = cc.Layer.extend({
         this.logs = logList;
 
         //The x at which the saws move long
-        this.sawLine = cc.winSize.width - (Saw.width/2);
+        //this.sawLine = cc.winSize.width - (Saw.width/2);
 
-        this.sawMAX = cc.winSize.height-Saw.height;
-        this.sawMIN = Saw.height;
+        this.sawMAX = cc.winSize.height-150;
+        this.sawMIN = 150;
 
         this.setLocalZOrder(10);
 
@@ -30,7 +30,7 @@ var SawLayer = cc.Layer.extend({
         this._super();
 
         // TODO: Put the saw in the correct place
-        this.addSaw(256, 256, 0);
+        this.addSaw(cc.winSize.width-32, cc.winSize.height/2, 0);
 
     },
 
@@ -40,17 +40,18 @@ var SawLayer = cc.Layer.extend({
             var new_y = this.saws[i].y + this.saws[i].sawVelocity *dt;
 
             if (new_y >= this.sawMAX) {
-                new_y = this.sawMAX(new_y-this.sawMAX);
+                new_y = this.sawMAX-(new_y-this.sawMAX);
+                this.saws[i].sawVelocity *= -1;
             }
 
             if (new_y <= this.sawMIN) {
                 new_y = this.sawMIN+(this.sawMIN-new_y);
+                this.saws[i].sawVelocity *= -1;
             }
 
             this.saws[i].y = new_y;
 
             if (this.saws[i].sawActive == true) {
-                this.saws[i].y += this.saws[i].sawVelocity;
                 this.checkHits(this.saws[i]);
             }
         }
@@ -93,8 +94,6 @@ var SawLayer = cc.Layer.extend({
 
             if (!not_hit) {
                 //TODO Replace the below pseudocode with actual code
-                cc.log("We have a hit!");
-
                 var score = 0;
 
                 score += this.logs[i].getScore();
