@@ -365,8 +365,16 @@ var GameScene = cc.Scene.extend({
             cc.log("Entered GameScene");
             
             switch (this.goToScene) {
+                case ("MenuIntro") : {
+                    var Scene = new playCutScene();
+                    Scene.init(this, "Menu");
+                    cc.director.pushScene(Scene);
+                } break;
                 case ("Menu") : {
                     this.scheduleOnce( this.DoTransitionToMenu, 2.1);
+                } break;
+                case ("Level1") : {
+                    this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
                 } break;
                 case ("Level1") : {
                     this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
@@ -387,14 +395,13 @@ var GameScene = cc.Scene.extend({
     DoTransitionToLevel1Scene : function() {
         var Scene = new level1Scene();
         Scene.init(this, 50, 100, 200);
-        //var SceneTransition = new cc.TransitionFade(2, Scene, cc.Color(0,0,0,1));
         cc.director.pushScene(Scene);
         return true;
     },
     DoTransitionToMenu : function() {
         var Scene = new level1Scene();
-        var SceneTransition = new cc.TransitionFade(2, Scene, cc.Color(0,0,0,1));
-        cc.director.pushScene(SceneTransition);
+        //var SceneTransition = new cc.TransitionFade(2, Scene, cc.Color(0,0,0,1));
+        cc.director.pushScene(Scene);
         return true;
     }
     

@@ -14,7 +14,6 @@ var inputRead = cc.Node.extend({
             this );
         }
         
-        
         this.KeyStates = {
             a     : 0,
             d     : 0,
