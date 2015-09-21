@@ -282,6 +282,16 @@ var level1Scene = levelTemplateScene.extend({
         GuiLayer.init(90, 1, this.Score, this);
         
         this.addChild(GuiLayer);
+
+        // Saws
+        var sawLayer = new SawLayer(logLayer.logs);
+        sawLayer.init();
+        this.addChild(sawLayer);
+
+        // Beavers
+        var beaverLayer = new BeaverLayer(Player);
+        beaverLayer.init();
+        this.addChild(beaverLayer);
     }
 });
 
@@ -350,15 +360,6 @@ var level3Scene = levelTemplateScene.extend({
         GuiLayer.init(90, 3, 0, this);
         this.addChild(GuiLayer);
 
-        // Saws
-        var sawLayer = new SawLayer(logLayer.logs);
-        sawLayer.init();
-        this.addChild(sawLayer);
-
-        // Beavers
-        var beaverLayer = new BeaverLayer(Player);
-        beaverLayer.init();
-        this.addChild(beaverLayer);
         
     }
 });

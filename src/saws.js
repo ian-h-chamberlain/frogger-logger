@@ -14,12 +14,13 @@ var SawLayer = cc.Layer.extend({
         //The x at which the saws move long
         //this.sawLine = cc.winSize.width - (Saw.width/2);
 
-        this.sawMAX = cc.winSize.height-150;
+        this.sawMAX = cc.winSize.height-155;
         this.sawMIN = 150;
 
         this.setLocalZOrder(10);
 
         this.scheduleUpdate();
+
 
         return true;
 
@@ -31,6 +32,7 @@ var SawLayer = cc.Layer.extend({
 
         // TODO: Put the saw in the correct place
         this.addSaw(cc.winSize.width-32, cc.winSize.height/2, 0);
+
 
     },
 
@@ -94,6 +96,7 @@ var SawLayer = cc.Layer.extend({
 
             if (!not_hit) {
                 //TODO Replace the below pseudocode with actual code
+
                 var score = 0;
 
                 score += this.logs[i].getScore();
