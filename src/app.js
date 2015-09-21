@@ -8,6 +8,8 @@ var RpiLayer = cc.Layer.extend({
         var winsize = cc.director.getWinSize();
         var centerpos = cc.p(winsize.width / 2, winsize.height / 2);
         
+        cc.log("rpi logo");
+        
         // Display an image
         var RpiFlag = new cc.Sprite ( res.RpiMono_png);
         RpiFlag.setPosition(centerpos);
@@ -43,6 +45,7 @@ var StartLayer = cc.Layer.extend({
         var winsize = cc.director.getWinSize();
         var centerpos = cc.p(winsize.width / 2, winsize.height / 2);
         
+        
         // Display an image
         var TeamLogo = new cc.Sprite ( res.CompassLogo_png);
         TeamLogo.setPosition(centerpos);
@@ -67,6 +70,7 @@ var LogoScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
         
+        cc.log("start layer");
         var layer = new StartLayer();
         layer.init();
         this.addChild(layer);

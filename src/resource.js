@@ -64,7 +64,10 @@ var res = {
     water6_png: "res/water/water6.png",
     water7_png: "res/water/water7.png",
     water8_png: "res/water/water8.png",
-    water9_png: "res/water/water9.png"
+    water9_png: "res/water/water9.png",
+    
+    cs_intro1_png : "res/cutscenes/cs_intro1.png",
+    cs_intro2_png : "res/cutscenes/cs_intro2.png"
 };
 
 var g_resources = [];

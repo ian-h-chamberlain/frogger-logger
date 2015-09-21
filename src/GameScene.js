@@ -367,7 +367,9 @@ var GameScene = cc.Scene.extend({
             switch (this.goToScene) {
                 case ("MenuIntro") : {
                     var Scene = new playCutScene();
-                    Scene.init(this, "Menu");
+                    var imgList = [];
+                    imgList.push(res.cs_intro1_png,res.cs_intro2_png);
+                    Scene.init(this, "Menu", imgList);
                     cc.director.pushScene(Scene);
                 } break;
                 case ("Menu") : {
@@ -376,7 +378,7 @@ var GameScene = cc.Scene.extend({
                 case ("Level1") : {
                     this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
                 } break;
-                case ("Level1") : {
+                case ("Level1transition") : {
                     this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
                 } break;
                 case ("Level2") : {
