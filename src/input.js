@@ -92,7 +92,7 @@ var inputRead = cc.Node.extend({
         } break;
         
         default : {
-            this.player.Scene.changeScoreBy(key);
+            //this.player.Scene.changeScoreBy(key);
             } break;
         }
     },
