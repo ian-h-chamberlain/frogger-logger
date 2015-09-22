@@ -12,7 +12,7 @@ var gameLayer = cc.Layer.extend({
         //TeamLogo.setPosition(centerpos);
         //this.addChild( TeamLogo);
         
-        cc.log("Entered Play Scene");
+       //cc.log("Entered Play Scene");
         
         return true;
     }
@@ -160,27 +160,61 @@ var guiLayer = cc.Layer.extend({
         this.Timer -= dt;
         this.LabelTime.setString("Time: "+ this.Timer.toFixed());
         this.LabelScore.setString("Score:\n"+this.Scene.Score.toFixed());
+        if (this.Timer < 0 )
+        {
+            if (this.Scene.Score < this.Scene.ScoreVictory)
+            {
+                this.Scene.killPlayer("I'll never win this bet now!", false, true, false);
+            }
+            else
+            {
+                this.Scene.killPlayer("I'm on my way to winning this bet!", false, false, false);
+            }
+        }
         return true;
     }
 });
 
-var deathLayer = cc.Layer.extend({
+var endLayer = cc.Layer.extend({
     ctor:function() {
         this._super();
     },
-    init:function(){
+    init:function( scene){
         this._super();
+        
+        this.hadDied = 0;
+
+        this.setLocalZOrder(25);
         
         this.winsize = cc.director.getWinSize();
         this.centerpos = cc.p(this.winsize.width / 2, this.winsize.height / 2);
+        this.Note = "\"I can't swim!\"";
+        
+        var blackBackground = cc.LayerColor.create( new cc.Color(0,0,0,255));
+        blackBackground.setPosition(0,0);
+        this.addChild(blackBackground);
         
         this.img = new cc.Sprite ( res.pleaseStandBy_png);
         this.img.setPosition(this.centerpos);
         this.addChild( this.img);
+        this.Score = 10;
+        this.Scene = scene;
         
-        this.scheduleOnce(this.score, 2);
-        this.Score = 0;
-        
+        return true;
+    },
+    updateNote : function ( newNote, badDeath){
+        if (this.hasDied) {return true;}
+        this.Note = newNote;
+        this.hasDied = 1;
+        if (badDeath)
+        {
+            this.scheduleOnce(this.score,2);
+        }
+        else
+        {
+            this.img.setOpacity(0);
+            this.score();
+        }
         return true;
     },
     score : function ( ) {
@@ -190,14 +224,20 @@ var deathLayer = cc.Layer.extend({
         this.LabelEnter.setPosition(cc.p( this.winsize.width/2, this.winsize.height/2 - 64));
         this.LabelEnter.setColor( new cc.Color(216,216,216));
         this.addChild( this.LabelEnter);
-
+        
+        this.LabelNote = new cc.LabelTTF( this.Note , "ArcadeClassic", 42, new cc.Size( 512+64, 128));
+        this.LabelNote.setHorizontalAlignment( cc.TEXT_ALIGN_CENTER);
+        this.LabelNote.setPosition(cc.p( this.winsize.width/2, this.winsize.height/2 + 128));
+        this.LabelNote.setColor( new cc.Color( 216,216,216));
+        this.addChild( this.LabelNote);
+        
         this.LabelerScore = new cc.LabelTTF("SCORE:", "ArcadeClassic", 42, new cc.size(192, 128));
         this.LabelerScore.setHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);
         this.LabelerScore.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2 + 64));
         this.LabelerScore.setColor(new cc.Color(216, 216, 216));
         this.addChild(this.LabelerScore);
         
-        this.LabelScore = new cc.LabelTTF(this.Score.toFixed(), "ArcadeClassic", 42, new cc.Size( 192, 128));
+        this.LabelScore = new cc.LabelTTF(this.Scene.Score.toFixed(), "ArcadeClassic", 42, new cc.Size( 192, 128));
         this.LabelScore.setHorizontalAlignment( cc.TEXT_ALIGNMENT_CENTER);
         this.LabelScore.setPosition(cc.p( this.winsize.width/2, this.winsize.height/2));
         this.LabelScore.setColor( new cc.Color(216,216,216));
@@ -215,43 +255,71 @@ var levelTemplateScene = cc.Scene.extend({
         this.ScoreMilestone1 = 50;
         this.ScoreMilestone2 = 100;
         this.ScoreVictory = 200;
+        
+        this.ActualGotoScene;
+        //cc.log("start next scene on MENU");
+        //this.ProgressScene = "Menu";
+        this.badDeath = 0;
     },
-    init : function (GameScene, inScoreMilestone1, inScoreMilestone2, inScoreVictory) {
+    init : function (GameScene, inScoreMilestone1, inScoreMilestone2, inScoreVictory, nextScene) {
         this.gameScene = GameScene;
         this.ScoreMilestone1 = inScoreMilestone1;
         this.ScoreMilestone2 = inScoreMilestone2;
         this.ScoreVictory = inScoreVictory;
+        this.ProgressScene = nextScene;
+        //cc.log("planned next scene: "+this.ProgressScene);
+        
     },
     initDeath : function () {
-        this.DeathLayer = new deathLayer();
-        this.DeathLayer.init();
+        this.DeathLayer = new endLayer();
+        this.DeathLayer.init(this);
+    },
+    killPlayer : function ( causeOfDeath, badDeath, goToMenu, playSplash) {
+        this.Player.die();
+        this.DeathLayer.updateNote( causeOfDeath,badDeath);
+        this.badDeath = badDeath;
+        this.Player.fellInWater = playSplash
+        if ( goToMenu == true )
+        {
+            //cc.log( causeOfDeath );
+            //cc.log("set next stage menu");
+            this.ActualGotoScene = "Menu";
+        }
+        else
+        {
+            this.ActualGotoScene = this.ProgressScene;
+            //cc.log( causeOfDeath );
+            //cc.log("set next stage: "+this.ActualGotoScene);
+        }
     },
     playerDie : function ( ) {
-        this.DeathLayer.Score = this.Score;
         // stop bg music
         cc.audioEngine.stopMusic();
         // and effects
         cc.audioEngine.stopAllEffects();
         // play death sound
-        cc.audioEngine.playEffect(res.sawmill_wav, false);
+        if (this.badDeath)
+        {
+            cc.audioEngine.playEffect(res.sawmill_wav, false);
+        }
         this.addChild(this.DeathLayer);
     },
     changeScoreBy : function ( deltaScore ) {
         this.Score += deltaScore;
         if (this.Score > this.ScoreMilestone2)
         {
-            cc.log("city3");
+           //cc.log("city3");
             this.EnvLayer.town3.setOpacity(255);
         }
         else if (this.Score > this.ScoreMilestone1)
         {
-            cc.log("city2");
+           //cc.log("city2");
             this.EnvLayer.town2.setOpacity(255);
         }
     },
-    acceptDeath : function () {
-        cc.log("death accepted");
-        this.gameScene.setScene("Menu");
+    moveToNextStage : function () {
+        //cc.log("Next stage: " + this.ActualGotoScene);
+        this.gameScene.setScene(this.ActualGotoScene);
         cc.director.popScene();
     }
 });
@@ -261,13 +329,9 @@ var level1Scene = levelTemplateScene.extend({
         this._super();
 
         initPhysics(this);
-        
+        cc.log("LVL1");
         this.initDeath();
-        /* Make the level blue
-        var blueBackground = cc.LayerColor.create( new cc.Color(0,0,196,255));
-        blueBackground.setPosition(0,0);
-        this.addChild(blueBackground);
-        */
+
         // Environment
         this.EnvLayer = new environmentLayer();
         this.EnvLayer.init();
@@ -275,13 +339,14 @@ var level1Scene = levelTemplateScene.extend({
         
         // Draw the game
         // This will probably end up being multiple layers.
-        var logLayer = new LogLayer(this.space);
-        this.addChild(logLayer);
-        logLayer.addLog();
-        var log = logLayer.logs[0];
+        this.logLayer = new LogLayer(this.space);
+        this.addChild(this.logLayer);
+        this.logLayer.addLog();
+        var log = this.logLayer.logs[0];
         
-        var Player = new player( log, logLayer.logs, this);
-        logLayer.addChild(Player);
+        this.Player = new player( log, this.logLayer.logs, this);
+        this.logLayer.addChild(this.Player);
+        this.Player.setName("player");
         
         // Gui
         var GuiLayer = new guiLayer();
@@ -290,12 +355,14 @@ var level1Scene = levelTemplateScene.extend({
         this.addChild(GuiLayer);
 
         // Saws
-        var sawLayer = new SawLayer(logLayer.logs, 1);
+        var sawLayer = new SawLayer(this.logLayer.logs, 1);
+
         sawLayer.init();
         this.addChild(sawLayer);
 
         // Beavers
-        var beaverLayer = new BeaverLayer(Player, 1, logLayer.logs);
+        var beaverLayer = new BeaverLayer(this.Player, 1, this.logLayer.logs);
+
         beaverLayer.init();
         this.addChild(beaverLayer);
     }
@@ -304,41 +371,39 @@ var level1Scene = levelTemplateScene.extend({
 var level2Scene = levelTemplateScene.extend({
     onEnter:function () {
         this._super();
-
-        // initialize the physics
+        cc.log("LVL2");
         initPhysics(this);
+        this.initDeath();
 
-        // Make the level blue
-        var blueBackground = cc.LayerColor.create( new cc.Color(0,0,196,255));
-        blueBackground.setPosition(0,0);
-        this.addChild(blueBackground);
         // Environment
-        var EnvLayer = new environmentLayer();
-        EnvLayer.init();
-        this.addChild(EnvLayer);
+        this.EnvLayer = new environmentLayer();
+        this.EnvLayer.init();
+        this.addChild(this.EnvLayer);
         
         // Draw the game
         // This will probably end up being multiple layers.
-        var logLayer = new LogLayer(this.space);
-        this.addChild(logLayer);
-        logLayer.addLog();
-        var log = logLayer.logs[0];
+        this.logLayer = new LogLayer(this.space);
+        this.addChild(this.logLayer);
+        this.logLayer.addLog();
+        var log = this.logLayer.logs[0];
         
-        var Player = new player( log, logLayer.logs);
-        logLayer.addChild(Player);
+        this.Player = new player( log, this.logLayer.logs, this);
+        this.logLayer.addChild(this.Player);
+        this.Player.setName("player");
         
         // Gui
         var GuiLayer = new guiLayer();
-        GuiLayer.init(90, 2, 0, this);
+        GuiLayer.init(10, 2, this.Score, this);
+        
         this.addChild(GuiLayer);
 
         // Saws
-        var sawLayer = new SawLayer(logLayer.logs, 2);
+        var sawLayer = new SawLayer(this.logLayer.logs, 2);
         sawLayer.init();
         this.addChild(sawLayer);
 
         // Beavers
-        var beaverLayer = new BeaverLayer(Player, 2, logLayer.logs);
+        var beaverLayer = new BeaverLayer(this.Player, 2, this.logLayer.logs);
         beaverLayer.init();
         this.addChild(beaverLayer);
     }
@@ -347,42 +412,39 @@ var level2Scene = levelTemplateScene.extend({
 var level3Scene = levelTemplateScene.extend({
     onEnter:function () {
         this._super();
-
-        // initialize the physics
+        cc.log("LVL3");
         initPhysics(this);
+        this.initDeath();
 
-        // Make the level blue
-        var blueBackground = cc.LayerColor.create( new cc.Color(0,0,196,255));
-        blueBackground.setPosition(0,0);
-        this.addChild(blueBackground);
-        
         // Environment
-        var EnvLayer = new environmentLayer();
-        EnvLayer.init();
-        this.addChild(EnvLayer);
+        this.EnvLayer = new environmentLayer();
+        this.EnvLayer.init();
+        this.addChild(this.EnvLayer);
         
-        // Draw the game, this
+        // Draw the game
         // This will probably end up being multiple layers.
-        var logLayer = new LogLayer(this.space);
-        this.addChild(logLayer);
-        logLayer.addLog();
-        var log = logLayer.logs[0];
+        this.logLayer = new LogLayer(this.space);
+        this.addChild(this.logLayer);
+        this.logLayer.addLog();
+        var log = this.logLayer.logs[0];
         
-        var Player = new player( log, logLayer.logs);
-        logLayer.addChild(Player);
+        this.Player = new player( log, this.logLayer.logs, this);
+        this.logLayer.addChild(this.Player);
+        this.Player.setName("player");
         
         // Gui
         var GuiLayer = new guiLayer();
-        GuiLayer.init(90, 3, 0, this);
+        GuiLayer.init(10, 3, this.Score, this);
+        
         this.addChild(GuiLayer);
 
         // Saws
-        var sawLayer = new SawLayer(logLayer.logs, 3);
+        var sawLayer = new SawLayer(this.logLayer.logs, 3);
         sawLayer.init();
         this.addChild(sawLayer);
 
         // Beavers
-        var beaverLayer = new BeaverLayer(Player, 3, logLayer.logs);
+        var beaverLayer = new BeaverLayer(this.Player, 3, this.logLayer.logs);
         beaverLayer.init();
         this.addChild(beaverLayer);
     }
@@ -393,25 +455,70 @@ var GameScene = cc.Scene.extend({
 
         this._super();
 
-        // play background music
-        cc.audioEngine.playMusic("res/sound/backgroundMusic.mp3", true);
-
         {
             this.score = 0;
-            cc.log("Entered GameScene");
+           //cc.log("Entered GameScene");
             
             switch (this.goToScene) {
+                case ("MenuIntro") : {
+                    var Scene = new playCutScene();
+                    var imgList = [];
+                    imgList.push(res.cs_intro1_png,res.cs_intro2_png);
+                    Scene.init(this, "Menu", imgList);
+                    cc.director.pushScene(Scene);
+                } break;
                 case ("Menu") : {
-                    this.scheduleOnce( this.DoTransitionToMenu, 2.1);
+                    //cc.log("ROUTE TO MENU SCENE");
+                    var Scene = new startScene();
+                    Scene.init(this, "Level1Intro");
+                    cc.director.pushScene(Scene);
+                } break;
+                case ("Level1Intro") : {
+                    var Scene = new playCutScene();
+                    var imgList = [];
+                    imgList.push(res.cs_round1_1_png,res.cs_round1_2_png);
+                    Scene.init(this, "Level1", imgList);
+                    cc.director.pushScene(Scene);
                 } break;
                 case ("Level1") : {
-                    this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
+                    var Scene = new level1Scene();
+                    Scene.init(this, 50, 100, 200, "Level2Intro");
+                    cc.director.pushScene(Scene);
+                } break;
+                case ("Level2Intro") : {
+                    var Scene = new playCutScene();
+                    var imgList = [];
+                    imgList.push(res.cs_round2_1_png,res.cs_round2_2_png);
+                    Scene.init(this, "Level2", imgList);
+                    cc.director.pushScene(Scene);
                 } break;
                 case ("Level2") : {
-                    //this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
+                    var Scene = new level2Scene();
+                    Scene.init(this, 50, 100, 200, "Level3Intro");
+                    cc.director.pushScene(Scene);
+                } break;
+                case ("Level3Intro") : {
+                    var Scene = new playCutScene();
+                    var imgList = [];
+                    imgList.push(res.cs_round3_1_png,res.cs_round3_2_png);
+                    Scene.init(this, "Level3", imgList);
+                    cc.director.pushScene(Scene);
                 } break;
                 case ("Level3") : {
-                    //this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
+                    var Scene = new level3Scene();
+                    Scene.init(this, 50, 100, 200, "Level3End");
+                    cc.director.pushScene(Scene);
+                } break;
+                case ("Level3End") : {
+                    var Scene = new playCutScene();
+                    var imgList = [];
+                    imgList.push(res.cs_round4_1_png,res.cs_round4_2_png,res.cs_round4_3_png,res.cs_round4_4_png);
+                    Scene.init(this, "Menu", imgList);
+                    cc.director.pushScene(Scene);
+                } break;
+                case ("End") : {
+                    var Scene = new endScene();
+                    cc.director.pushScene(Scene);
                 } break;
                 default : {} break;
             }
@@ -419,19 +526,6 @@ var GameScene = cc.Scene.extend({
     },
     setScene : function (string) {
         this.goToScene = string;
-    },
-    DoTransitionToLevel1Scene : function() {
-        var Scene = new level1Scene();
-        Scene.init(this, 50, 100, 200);
-        //var SceneTransition = new cc.TransitionFade(2, Scene, cc.Color(0,0,0,1));
-        cc.director.pushScene(Scene);
-        return true;
-    },
-    DoTransitionToMenu : function() {
-        var Scene = new level1Scene();
-        var SceneTransition = new cc.TransitionFade(2, Scene, cc.Color(0,0,0,1));
-        cc.director.pushScene(SceneTransition);
-        return true;
     }
     
 });

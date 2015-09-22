@@ -17,7 +17,7 @@ var BeaverLayer = cc.Layer.extend({
         this.lastBeaver = 0;
 
         this.currentLevel = level;
-        this.setLocalZOrder(25000);
+        this.setLocalZOrder(15);
 
         this.scheduleUpdate();
 
@@ -144,10 +144,10 @@ var BeaverLayer = cc.Layer.extend({
                 var logLayer = this.parent.logLayer;
 
                 if (logLayer.getChildByName("player").ParentLog == this.logs[i]) {
-                    //cc.director.getRunningScene().killPlayer("Bodied", true, true, true);
+                    cc.director.getRunningScene().killPlayer("Bodied", true, true, true);
 
                     logLayer.removeChild(logLayer.logs[i]);
-                    this.logs(i, 1);
+                    this.logs.splice(i, 1);
                 }
             }
             else {

@@ -7,8 +7,13 @@ var player = cc.Sprite.extend({
         this.ParentLog.y = 375;
         this.ParentLog.velY = 0;
         
+        this.winsize = cc.director.getWinSize();
+        
+        this.active = 0;
+        
         this.isDead = 0 ;
         this.wentToDeathScreen = 0;
+        this.fellInWater = 0;
         
         this.standardAcceleration = .1;
         this.yAcceleration = 0;
@@ -63,6 +68,26 @@ var player = cc.Sprite.extend({
             this.x = this.ParentLog.x + this.ContactPoints[this.ParentContactIndex].x;
             this.y = this.ParentLog.y + this.ContactPoints[this.ParentContactIndex].y;
             
+            if (this.active)
+            {
+                // if we are off the screen, jump back on the screen
+                if (this.x < 0)
+                {
+                    this.switchSegmentRight();
+                }
+                else if (this.x > this.winsize.width)
+                {
+                    this.switchSegmentLeft();
+                }
+            }
+            else
+            {
+                if (this.x > 0)
+                {
+                    this.active = 1;
+                }
+            }
+                
             this.ParentLog.velY += this.yAcceleration;
             if (this.ParentLog.velY > .8)
             {this.ParentLog.velY = .8}
@@ -73,40 +98,51 @@ var player = cc.Sprite.extend({
         }
         else
         {
-            this.SplashTime += dt;
-            var FrameNumber = Math.floor(this.SplashTime / (1/16)) + 1;
-
-            // play splash effect
-            if (FrameNumber == 1) {
-                cc.audioEngine.playEffect(res.splash_wav, false);
-            }
-
-            if (FrameNumber <= 6)
+            if (this.fellInWater)
             {
-                if (FrameNumber == 6)
+                this.SplashTime += dt;
+                var FrameNumber = Math.floor(this.SplashTime / (1/16)) + 1;
+
+                // play splash effect
+                if (FrameNumber == 1) {
+                    cc.audioEngine.playEffect(res.splash_wav, false);
+                }
+
+                if (FrameNumber <= 6)
                 {
-                    if (!this.wentToDeathScreen)
+                    if (FrameNumber == 6)
                     {
-                        this.setOpacity(0);
-                        //cc.log("death screen");
-                        this.Scene.playerDie();
-                        this.wentToDeathScreen = 1;
+                        if (!this.wentToDeathScreen)
+                        {
+                            this.setOpacity(0);
+                            //cc.log("death screen");
+                            this.Scene.playerDie();
+                            this.wentToDeathScreen 
+                        }
+                    }
+                    else
+                    {
+                        var NextFrame = "lumberjack_Splash_" + FrameNumber;
+                        this.setSpriteFrame(NextFrame);
                     }
                 }
-                else
-                {
-                    var NextFrame = "lumberjack_Splash_" + FrameNumber;
-                    this.setSpriteFrame(NextFrame);
-                }
+            }
+            else
+            {
+                this.setOpacity(0);
+                this.Scene.playerDie();
+                this.wentToDeathScreen = 1;                
             }
         }
         return true;
     },
     moveLogLeft : function( ) {
+        if ( !this.active) { return true;}
         this.ParentLog.velX = -.8;
         return true;
     },
     switchSegmentLeft : function ( ) {
+        if ( !this.active) { return true;}
         if (this.ParentContactIndex > 0)
         {this.ParentContactIndex--;}
         else
@@ -114,25 +150,29 @@ var player = cc.Sprite.extend({
         return true;
     },
     moveLogRight : function( ) {
+        if ( !this.active) { return true;}
         this.ParentLog.velX = 2.6;
         return true;
     },
     switchSegmentRight : function ( ) {
+        if ( !this.active) { return true;}
         if (this.ParentContactIndex < this.ContactPoints.length-1)
         {this.ParentContactIndex++;}
         else
         {this.switchLog(this.x + 64, this.y);}
     },
     LogSetVerticalAcceleration : function( NewAcceleration ) {
+        if ( !this.active) { return true;}
         this.yAcceleration = NewAcceleration;
         return true;
     },
     normalizeLogXVel : function( ) {
-        
+        if ( !this.active) { return true;}
         this.ParentLog.velX = 1.6;
         return true;
     },
     switchLog : function( JumpPositionX, JumpPositionY) {
+        if ( !this.active) { return true;}
         
         // loop through the logs to see if there is one that does fits our destination.
         //cc.log("looking for jump");
@@ -169,13 +209,14 @@ var player = cc.Sprite.extend({
         }
         
         //Player death stuff
-        {
-            this.x = JumpPositionX;
-            this.y = JumpPositionY;
-            
-            this.isDead = 1;
-        }
+        this.x = JumpPositionX;
+        this.y = JumpPositionY;
+        this.Scene.killPlayer( "\"I can't swim!\"", true, true, true);
+        this.fellInWater = 1;
         return false;
+    },
+    die : function () {
+        this.isDead = 1;
     },
     decideSpriteFrame : function ( dt) {
         

@@ -30,7 +30,7 @@ var LogLayer = cc.Layer.extend({
         // check logs for being off-screen and delete them if so
         for (var i=0; i<this.logs.length; i++) {
             if ((this.logs[i].x - this.logs[i].width/2) > cc.winSize.width) {
-                delete this.logs[i];
+                this.removeChild(this.logs[i], true);
                 this.logs.splice(i, 1);
                 continue;
             }

@@ -30,9 +30,7 @@ var SawLayer = cc.Layer.extend({
         // Call super class's super function
         this._super();
 
-        // TODO: Put the saw in the correct place
         this.addSaw(cc.winSize.width-32, cc.winSize.height/2, 0);
-
 
     },
 
@@ -95,24 +93,32 @@ var SawLayer = cc.Layer.extend({
             //if any of the above made not_hit true; the log wasn't hit.
 
             if (!not_hit) {
-                //TODO Replace the below pseudocode with actual code
 
                 var score = 0;
 
-                score += this.logs[i].getScore();
+                var logLayer = this.parent.logLayer;
 
-                if (this.logs[i].getChildByName("player name string") != null) {
-                    score += this.logs[i].getChildByName("player name string").getScore();
+                if (logLayer.getChildByName("player").ParentLog == this.logs[i]) {
+                    // also kill the player
+                    cc.director.getRunningScene().killPlayer("Saw blades are sharp...", true, true, true);
                 }
-                if (this.logs[i].getChildByName("beaver name string") != null) {
+                else if (this.logs[i].getChildByName("beaver name string") != null) {
                     score += this.logs[i].getChildByName("beaver name string").getScore();
                 }
-
-                //Todo update player's score, destroy player and logs
-
+                else {
+                    score += this.logs[i].getScore();
                 }
 
+                // change the player's score
+                cc.director.getRunningScene().changeScoreBy(score);
+
+                // remove the relevant log
+                this.logs[i].parent.removeChild(this.logs[i], true);
+                this.logs.splice(i, 1);
+
             }
+
+        }
     }
 
 
