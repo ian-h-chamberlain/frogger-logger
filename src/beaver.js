@@ -112,7 +112,7 @@ var BeaverLayer = cc.Layer.extend({
 
     addBeaver:function() {
         // create a beaver at the spawn location
-        var beaver = new Beaver(res.saw_1_png);
+        var beaver = new Beaver(res.beaver_walk_1_png);
 
         beaver.x = beaver.spawn_x;
         beaver.y = beaver.spawn_y;
@@ -141,6 +141,14 @@ var BeaverLayer = cc.Layer.extend({
 
             if (!not_hit) {
                 cc.log("bodied");
+                var logLayer = this.parent.logLayer;
+
+                if (logLayer.getChildByName("player").ParentLog == this.logs[i]) {
+                    //cc.director.getRunningScene().killPlayer("Bodied", true, true, true);
+
+                    logLayer.removeChild(logLayer.logs[i]);
+                    this.logs(i, 1);
+                }
             }
             else {
             }
