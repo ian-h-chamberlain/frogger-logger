@@ -169,13 +169,13 @@ var player = cc.Sprite.extend({
         }
         
         //Player death stuff
-        {
-            this.x = JumpPositionX;
-            this.y = JumpPositionY;
-            
-            this.isDead = 1;
-        }
+        this.x = JumpPositionX;
+        this.y = JumpPositionY;
+        this.die();
         return false;
+    },
+    die : function () {
+        this.isDead = 1;
     },
     decideSpriteFrame : function ( dt) {
         

@@ -24,12 +24,12 @@ var inputRead = cc.Node.extend({
         
     },
     onKeyPressed : function (key, event) {
-        
+        //cc.log ("INPUT input: "+key);
         if (this.player.isDead)
         {
             if (key == cc.KEY.enter ) {
                 //cc.log("word");
-                cc.log("death acceptance call");
+               //cc.log("death acceptance call");
                 cc.director.getRunningScene().acceptDeath();
             }
             return true;
@@ -49,7 +49,7 @@ var inputRead = cc.Node.extend({
         } break; 
         case cc.KEY.s : {
             this.player.LogSetVerticalAcceleration(-this.player.standardAcceleration);
-            cc.log("s");
+           //cc.log("s");
             if (this.KeyStates.shift && !this.KeyStates.s)
             {
                 this.player.switchLog(this.player.x, this.player.y - 64);

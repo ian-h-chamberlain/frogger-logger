@@ -67,7 +67,10 @@ var res = {
     water9_png: "res/water/water9.png",
     
     cs_intro1_png : "res/cutscenes/cs_intro1.png",
-    cs_intro2_png : "res/cutscenes/cs_intro2.png"
+    cs_intro2_png : "res/cutscenes/cs_intro2.png",
+    
+    cs_round1_1_png : "res/cutscenes/cs_round1_1.png",
+    cs_round1_2_png : "res/cutscenes/cs_round1_2.png"
 };
 
 var g_resources = [];

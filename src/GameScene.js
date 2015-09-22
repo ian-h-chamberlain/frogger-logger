@@ -12,7 +12,7 @@ var gameLayer = cc.Layer.extend({
         //TeamLogo.setPosition(centerpos);
         //this.addChild( TeamLogo);
         
-        cc.log("Entered Play Scene");
+       //cc.log("Entered Play Scene");
         
         return true;
     }
@@ -234,17 +234,17 @@ var levelTemplateScene = cc.Scene.extend({
         this.Score += deltaScore;
         if (this.Score > this.ScoreMilestone2)
         {
-            cc.log("city3");
+           //cc.log("city3");
             this.EnvLayer.town3.setOpacity(255);
         }
         else if (this.Score > this.ScoreMilestone1)
         {
-            cc.log("city2");
+           //cc.log("city2");
             this.EnvLayer.town2.setOpacity(255);
         }
     },
     acceptDeath : function () {
-        cc.log("death accepted");
+       //cc.log("death accepted");
         this.gameScene.setScene("Menu");
         cc.director.popScene();
     }
@@ -358,11 +358,11 @@ var GameScene = cc.Scene.extend({
         this._super();
 
         // play background music
-        cc.audioEngine.playMusic("res/sound/backgroundMusic.mp3", true);
+        //cc.audioEngine.playMusic("res/sound/backgroundMusic.mp3", true);
 
         {
             this.score = 0;
-            cc.log("Entered GameScene");
+           //cc.log("Entered GameScene");
             
             switch (this.goToScene) {
                 case ("MenuIntro") : {
@@ -373,15 +373,32 @@ var GameScene = cc.Scene.extend({
                     cc.director.pushScene(Scene);
                 } break;
                 case ("Menu") : {
-                    this.scheduleOnce( this.DoTransitionToMenu, 2.1);
+                    //cc.log("ROUTE TO MENU SCENE");
+                    var Scene = new startScene();
+                    Scene.init(this, "Level1Intro");
+                    cc.director.pushScene(Scene);
+                } break;
+                case ("Level1Intro") : {
+                    var Scene = new playCutScene();
+                    var imgList = [];
+                    imgList.push(res.cs_round1_1_png,res.cs_round1_2_png);
+                    Scene.init(this, "Level1", imgList);
+                    cc.director.pushScene(Scene);
                 } break;
                 case ("Level1") : {
                     this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
                 } break;
-                case ("Level1transition") : {
-                    this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
+                case ("Level2Intro") : {
+                    var Scene = new playCutScene();
+                    var imgList = [];
+                    imgList.push(res.cs_round1_1_png,res.cs_round1_2_png);
+                    Scene.init(this, "Level1", imgList);
+                    cc.director.pushScene(Scene);
                 } break;
                 case ("Level2") : {
+                    //this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
+                } break;
+                case ("Level3Intro") : {
                     //this.scheduleOnce( this.DoTransitionToLevel1Scene, 2.1);
                 } break;
                 case ("Level3") : {

@@ -1,4 +1,4 @@
-var RpiLayer = cc.Layer.extend({
+var RpiLogoLayer = cc.Layer.extend({
     ctor:function() {
         this._super();
     },
@@ -8,7 +8,7 @@ var RpiLayer = cc.Layer.extend({
         var winsize = cc.director.getWinSize();
         var centerpos = cc.p(winsize.width / 2, winsize.height / 2);
         
-        cc.log("rpi logo");
+       //cc.log("rpi logo");
         
         // Display an image
         var RpiFlag = new cc.Sprite ( res.RpiMono_png);
@@ -18,7 +18,7 @@ var RpiLayer = cc.Layer.extend({
         //cc.log("Got to Rpi Scene!");
         
         // Transition to the next scene.
-        var NextScene = new LogoScene();
+        var NextScene = new TeamLogoScene();
         var TransitionScene = new cc.TransitionFade(2, NextScene, cc.Color(0,0,0,1));
         cc.director.runScene(TransitionScene);
         
@@ -29,13 +29,13 @@ var RpiLayer = cc.Layer.extend({
 var EnterWorldScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
-        var layer = new RpiLayer();
+        var layer = new RpiLogoLayer();
         layer.init();
         this.addChild(layer);
     }
 });
 
-var StartLayer = cc.Layer.extend({
+var TeamLogoLayer = cc.Layer.extend({
     ctor : function () {
         this._super();
     },
@@ -45,6 +45,7 @@ var StartLayer = cc.Layer.extend({
         var winsize = cc.director.getWinSize();
         var centerpos = cc.p(winsize.width / 2, winsize.height / 2);
         
+       //cc.log("Team Logo Layer");
         
         // Display an image
         var TeamLogo = new cc.Sprite ( res.CompassLogo_png);
@@ -60,19 +61,80 @@ var StartLayer = cc.Layer.extend({
         //cc.log("Ran CallBack");
         var NNextScene = new GameScene();
         NNextScene.setScene("MenuIntro");
-        var NTransitionScene = new cc.TransitionFade(2, NNextScene, cc.Color(0,0,0,1));
-        cc.director.runScene(NTransitionScene);
+        //var NTransitionScene = new cc.TransitionFade(2, NNextScene, cc.Color(0,0,0,1));
+        cc.director.runScene(NNextScene);
         return true;
     }
 });
 
-var LogoScene = cc.Scene.extend({
+var TeamLogoScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
         
-        cc.log("start layer");
-        var layer = new StartLayer();
+       //cc.log("Team Logo Scene");
+        var layer = new TeamLogoLayer();
         layer.init();
         this.addChild(layer);
+    }
+});
+
+var startLayer = cc.Layer.extend({
+    ctor : function () {
+        this._super();
+       //cc.log("construct layer");
+        
+        //var randomthinglookatthisname = new inputRead();
+        //this.addChild(randomthinglookatthisname);
+        
+        if (cc.sys.capabilities.hasOwnProperty('keyboard'))
+        {
+            cc.eventManager.addListener(
+                cc.EventListener.create({
+                    event: cc.EventListener.KEYBOARD,
+                    onKeyPressed: this.onKeyPressed.bind(this),
+                    onKeyReleased: this.onKeyReleased.bind(this)
+                }),
+            this );
+        }
+        
+        //cc.log (" added event manager");
+    },
+    onKeyReleased: function (key, event) {
+        if (key == cc.KEY.enter) {this.leave();}
+        return false;
+    },
+    onKeyPressed: function (key, event) {return false;},
+    init : function (gameScene, token) {
+        
+        //cc.log ("start layer");
+        
+        var winsize = cc.director.getWinSize();
+        var centerpos = cc.p(winsize.width / 2, winsize.height / 2);
+        
+        // Display an image
+        var TeamLogo = new cc.Sprite ( res.pressStart_png);
+        TeamLogo.setPosition(centerpos);
+        this.addChild( TeamLogo);
+        
+        this.destinationToken = token;
+        this.gameScene = gameScene;
+    },
+    leave : function () {
+        this.gameScene.setScene( this.destinationToken);
+        cc.director.popScene();
+    }
+});
+
+var startScene = cc.Scene.extend({
+    onEnter : function () {
+        this._super();
+        //cc.log ("start scene entered");
+        return true;
+    },
+    init : function (gameScene, token) {
+        //cc.log ("start scene initialized");
+        this.StartLayer = new startLayer();
+        this.StartLayer.init(gameScene, token);
+        this.addChild(this.StartLayer);
     }
 });
