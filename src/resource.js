@@ -66,7 +66,23 @@ var res = {
     water8_png: "res/water/water8.png",
     water9_png: "res/water/water9.png",
 
-    arcadeclassic_ttf: "res/font/ArcadeClassic.ttf"
+    arcadeclassic_ttf: "res/font/ArcadeClassic.ttf",
+    
+    cs_intro1_png : "res/cutscenes/cs_intro1.png",
+    cs_intro2_png : "res/cutscenes/cs_intro2.png",
+    
+    cs_round1_1_png : "res/cutscenes/cs_round1_1.png",
+    cs_round1_2_png : "res/cutscenes/cs_round1_2.png",
+    
+    cs_round2_1_png : "res/cutscenes/cs_round2_1.png",
+    cs_round2_2_png : "res/cutscenes/cs_round2_2.png",
+    
+    cs_round3_1_png : "res/cutscenes/cs_round3_1.png",
+    cs_round3_2_png : "res/cutscenes/cs_round3_2.png",
+    
+    cs_round4_1_png : "res/cutscenes/cs_round4_1.png",
+    cs_round4_2_png : "res/cutscenes/cs_round4_2.png",
+    cs_round4_3_png : "res/cutscenes/cs_round4_3.png"
 };
 
 var g_resources = [];

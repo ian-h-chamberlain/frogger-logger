@@ -9,6 +9,7 @@ var player = cc.Sprite.extend({
         
         this.isDead = 0 ;
         this.wentToDeathScreen = 0;
+        this.fellInWater = 0;
         
         this.standardAcceleration = .1;
         this.yAcceleration = 0;
@@ -95,8 +96,11 @@ var player = cc.Sprite.extend({
                 }
                 else
                 {
-                    var NextFrame = "lumberjack_Splash_" + FrameNumber;
-                    this.setSpriteFrame(NextFrame);
+                    if (this.fellInWater)
+                    {
+                        var NextFrame = "lumberjack_Splash_" + FrameNumber;
+                        this.setSpriteFrame(NextFrame);
+                    }
                 }
             }
         }
@@ -169,13 +173,14 @@ var player = cc.Sprite.extend({
         }
         
         //Player death stuff
-        {
-            this.x = JumpPositionX;
-            this.y = JumpPositionY;
-            
-            this.isDead = 1;
-        }
+        this.x = JumpPositionX;
+        this.y = JumpPositionY;
+        this.Scene.killPlayer( "\"I can't swim!\"", true, "Menu");
+        this.fellInWater = 1;
         return false;
+    },
+    die : function () {
+        this.isDead = 1;
     },
     decideSpriteFrame : function ( dt) {
         
