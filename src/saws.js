@@ -101,8 +101,6 @@ var SawLayer = cc.Layer.extend({
                 var logLayer = this.parent.logLayer;
 
                 if (logLayer.getChildByName("player").ParentLog == this.logs[i]) {
-                    score += logLayer.getChildByName("player").getScore();
-                    cc.log(logLayer.getChildByName("player").getScore());
                     // also kill the player
                     cc.director.getRunningScene().killPlayer("Saw blades are sharp...", true, "thisLevel");
                 }
