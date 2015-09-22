@@ -30,9 +30,7 @@ var SawLayer = cc.Layer.extend({
         // Call super class's super function
         this._super();
 
-        // TODO: Put the saw in the correct place
         this.addSaw(cc.winSize.width-32, cc.winSize.height/2, 0);
-
 
     },
 

@@ -328,11 +328,7 @@ var level1Scene = levelTemplateScene.extend({
         initPhysics(this);
         cc.log("LVL1");
         this.initDeath();
-        /* Make the level blue
-        var blueBackground = cc.LayerColor.create( new cc.Color(0,0,196,255));
-        blueBackground.setPosition(0,0);
-        this.addChild(blueBackground);
-        */
+
         // Environment
         this.EnvLayer = new environmentLayer();
         this.EnvLayer.init();
@@ -373,11 +369,7 @@ var level2Scene = levelTemplateScene.extend({
         cc.log("LVL2");
         initPhysics(this);
         this.initDeath();
-        /* Make the level blue
-        var blueBackground = cc.LayerColor.create( new cc.Color(0,0,196,255));
-        blueBackground.setPosition(0,0);
-        this.addChild(blueBackground);
-        */
+
         // Environment
         this.EnvLayer = new environmentLayer();
         this.EnvLayer.init();
@@ -408,11 +400,7 @@ var level3Scene = levelTemplateScene.extend({
         cc.log("LVL3");
         initPhysics(this);
         this.initDeath();
-        /* Make the level blue
-        var blueBackground = cc.LayerColor.create( new cc.Color(0,0,196,255));
-        blueBackground.setPosition(0,0);
-        this.addChild(blueBackground);
-        */
+
         // Environment
         this.EnvLayer = new environmentLayer();
         this.EnvLayer.init();
@@ -443,9 +431,6 @@ var GameScene = cc.Scene.extend({
     onEnter:function () {
 
         this._super();
-
-        // play background music
-        //cc.audioEngine.playMusic("res/sound/backgroundMusic.mp3", true);
 
         {
             this.score = 0;
