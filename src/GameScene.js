@@ -340,22 +340,23 @@ var level1Scene = levelTemplateScene.extend({
         
         // Draw the game
         // This will probably end up being multiple layers.
-        var logLayer = new LogLayer(this.space);
-        this.addChild(logLayer);
-        logLayer.addLog();
-        var log = logLayer.logs[0];
+        this.logLayer = new LogLayer(this.space);
+        this.addChild(this.logLayer);
+        this.logLayer.addLog();
+        var log = this.logLayer.logs[0];
         
-        this.Player = new player( log, logLayer.logs, this);
-        logLayer.addChild(this.Player);
+        this.Player = new player( log, this.logLayer.logs, this);
+        this.logLayer.addChild(this.Player);
+        this.Player.setName("player");
         
         // Gui
         var GuiLayer = new guiLayer();
-        GuiLayer.init(10, 1, this.Score, this);
+        GuiLayer.init(90, 1, this.Score, this);
         
         this.addChild(GuiLayer);
 
         // Saws
-        var sawLayer = new SawLayer(logLayer.logs);
+        var sawLayer = new SawLayer(this.logLayer.logs);
         sawLayer.init();
         this.addChild(sawLayer);
 
@@ -384,13 +385,14 @@ var level2Scene = levelTemplateScene.extend({
         
         // Draw the game
         // This will probably end up being multiple layers.
-        var logLayer = new LogLayer(this.space);
-        this.addChild(logLayer);
-        logLayer.addLog();
-        var log = logLayer.logs[0];
+        this.logLayer = new LogLayer(this.space);
+        this.addChild(this.logLayer);
+        this.logLayer.addLog();
+        var log = this.logLayer.logs[0];
         
-        this.Player = new player( log, logLayer.logs, this);
-        logLayer.addChild(this.Player);
+        this.Player = new player( log, this.logLayer.logs, this);
+        this.logLayer.addChild(this.Player);
+        this.Player.setName("player");
         
         // Gui
         var GuiLayer = new guiLayer();
@@ -418,13 +420,14 @@ var level3Scene = levelTemplateScene.extend({
         
         // Draw the game
         // This will probably end up being multiple layers.
-        var logLayer = new LogLayer(this.space);
-        this.addChild(logLayer);
-        logLayer.addLog();
-        var log = logLayer.logs[0];
+        this.logLayer = new LogLayer(this.space);
+        this.addChild(this.logLayer);
+        this.logLayer.addLog();
+        var log = this.logLayer.logs[0];
         
-        this.Player = new player( log, logLayer.logs, this);
-        logLayer.addChild(this.Player);
+        this.Player = new player( log, this.logLayer.logs, this);
+        this.logLayer.addChild(this.Player);
+        this.Player.setName("player");
         
         // Gui
         var GuiLayer = new guiLayer();

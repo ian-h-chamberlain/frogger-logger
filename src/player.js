@@ -182,6 +182,10 @@ var player = cc.Sprite.extend({
     die : function () {
         this.isDead = 1;
     },
+
+    getScore: function() {
+        return -100; // Score elements can be changed
+    },
     decideSpriteFrame : function ( dt) {
         
         this.time += dt;
