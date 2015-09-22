@@ -16,7 +16,10 @@ var displayLayer = cc.Layer.extend({
         return true;
     },
     onKeyReleased: function (key, event) {
-        if (key == cc.KEY.enter) {this.nextFrame();}
+        if (key == cc.KEY.enter) {
+            this.nextFrame();
+            cc.log("SKIP FRAME");
+            }
         return false;
     },
     onKeyPressed: function (key, event) {return false;},

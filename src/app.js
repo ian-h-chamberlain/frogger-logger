@@ -138,3 +138,26 @@ var startScene = cc.Scene.extend({
         this.addChild(this.StartLayer);
     }
 });
+
+var endLayer = cc.Layer.extend({
+    ctor : function () {
+        this._super();
+        var winsize = cc.director.getWinSize();
+        var centerpos = cc.p(winsize.width / 2, winsize.height / 2);
+        
+        // Display an image
+        var endImg = new cc.Sprite ( res.cs_round4_3_png);
+        endImg.setPosition(centerpos);
+        this.addChild( endImg);
+    }
+});
+
+
+var endScene = cc.Scene.extend({
+    onEnter:function () {
+        this._super();
+        var layer = new endLayer();
+        layer.init();
+        this.addChild(layer);
+    }
+});

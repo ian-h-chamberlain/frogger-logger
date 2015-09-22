@@ -171,7 +171,7 @@ var player = cc.Sprite.extend({
         //Player death stuff
         this.x = JumpPositionX;
         this.y = JumpPositionY;
-        this.die();
+        this.Scene.killPlayer( "\"I can't swim!\"", true, "Menu");
         return false;
     },
     die : function () {

@@ -26,17 +26,9 @@ var inputRead = cc.Node.extend({
     onKeyPressed : function (key, event) {
         //cc.log ("INPUT input: "+key);
         if (this.player.isDead)
-        {
-            if (key == cc.KEY.enter ) {
-                //cc.log("word");
-               //cc.log("death acceptance call");
-                cc.director.getRunningScene().acceptDeath();
-            }
-            return true;
-        }
-        //console.log(this);
+        {return true;}
         switch (key) {
-        case cc.KEY.a : {
+        case cc.KEY.a : case cc.KEY.left : {
             if (this.KeyStates.a == 0)
             {
                 this.KeyStates.a = 1;
@@ -47,15 +39,12 @@ var inputRead = cc.Node.extend({
                 //cc.log("a");
             }
         } break; 
-        case cc.KEY.s : {
+        case cc.KEY.s : case cc.KEY.down : {
             this.player.LogSetVerticalAcceleration(-this.player.standardAcceleration);
            //cc.log("s");
             if (this.KeyStates.shift && !this.KeyStates.s)
             {
                 this.player.switchLog(this.player.x, this.player.y - 64);
-            }
-            else
-            {
             }
             
             if (this.KeyStates.s == 0)
@@ -63,7 +52,7 @@ var inputRead = cc.Node.extend({
                 this.KeyStates.s = 1;
             }
         } break;
-        case cc.KEY.w : {
+        case cc.KEY.w : case cc.KEY.up : {
             this.player.LogSetVerticalAcceleration(this.player.standardAcceleration);
             if (this.KeyStates.shift && !this.KeyStates.w)
             {
@@ -76,7 +65,7 @@ var inputRead = cc.Node.extend({
                 //cc.log("w");
             }
         } break;
-        case cc.KEY.d : {
+        case cc.KEY.d : case cc.KEY.right : {
             if (this.KeyStates.d == 0)
             {
                 {this.player.moveLogRight();}
@@ -108,17 +97,25 @@ var inputRead = cc.Node.extend({
         }
     },
     onKeyReleased : function (key, event) {
+        
         if (this.player.isDead)
-        {return true;}
+        {
+            if (key == cc.KEY.enter ) {
+                //cc.log("word");
+               //cc.log("death acceptance call");
+                cc.director.getRunningScene().moveToNextStage();
+            }
+            return true;
+        }
         switch (key) {
-        case cc.KEY.a : {
+        case cc.KEY.a : case cc.KEY.left : {
             {this.player.normalizeLogXVel();}
             if (this.KeyStates.d)
             {this.player.moveLogRight();}
             this.KeyStates.a = 0;
             //cc.log("a-");
         } break;
-        case cc.KEY.s : {
+        case cc.KEY.s : case cc.KEY.down : {
             this.KeyStates.s = 0;
             if (this.KeyStates.w)
             {
@@ -130,7 +127,7 @@ var inputRead = cc.Node.extend({
             }
             //cc.log("s-");
         } break;
-        case cc.KEY.w : {
+        case cc.KEY.w : case cc.KEY.up : {
             this.KeyStates.w = 0;
             if (this.KeyStates.s)
             {
@@ -142,7 +139,7 @@ var inputRead = cc.Node.extend({
             }
             //cc.log("w-");
         } break;
-        case cc.KEY.d : {
+        case cc.KEY.d : case cc.KEY.right : {
             {this.player.normalizeLogXVel();}
             if (this.KeyStates.a)
             {this.player.moveLogLeft();}
