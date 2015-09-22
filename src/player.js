@@ -175,7 +175,7 @@ var player = cc.Sprite.extend({
         //Player death stuff
         this.x = JumpPositionX;
         this.y = JumpPositionY;
-        this.Scene.killPlayer( "\"I can't swim!\"", true, "Menu");
+        this.Scene.killPlayer( "\"I can't swim!\"", true, true);
         this.fellInWater = 1;
         return false;
     },

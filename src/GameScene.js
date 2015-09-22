@@ -164,11 +164,11 @@ var guiLayer = cc.Layer.extend({
         {
             if (this.Scene.Score < this.Scene.ScoreVictory)
             {
-                this.Scene.killPlayer("I'll never win this bet now!", false, "Menu");
+                this.Scene.killPlayer("I'll never win this bet now!", false, true);
             }
             else
             {
-                this.Scene.killPlayer("I'm on my way to winning this bet!", false, "nextlevel");
+                this.Scene.killPlayer("I'm on my way to winning this bet!", false, false);
             }
         }
         return true;
@@ -272,11 +272,11 @@ var levelTemplateScene = cc.Scene.extend({
         this.DeathLayer = new endLayer();
         this.DeathLayer.init(this);
     },
-    killPlayer : function ( causeOfDeath, badDeath, newScene) {
+    killPlayer : function ( causeOfDeath, badDeath, goToMenu) {
         this.Player.die();
         this.DeathLayer.updateNote( causeOfDeath,badDeath);
         this.badDeath = badDeath;
-        if ( newScene == "Menu" )
+        if ( goToMenu == true )
         {
             //cc.log( causeOfDeath );
             //cc.log("set next stage menu");
