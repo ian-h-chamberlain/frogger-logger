@@ -1,7 +1,7 @@
 var SawLayer = cc.Layer.extend({
     sprite:null,
 
-    ctor:function (logList) {
+    ctor:function (logList, level) {
         // Call super classes ctor function
         this._super();
 
@@ -108,7 +108,7 @@ var SawLayer = cc.Layer.extend({
                     score += this.logs[i].getChildByName("beaver name string").getScore();
                 }
 
-                //Todo update player's score
+                //Todo update player's score, destroy player and logs
 
                 }
 
