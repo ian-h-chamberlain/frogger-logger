@@ -348,7 +348,7 @@ var level1Scene = levelTemplateScene.extend({
         
         // Gui
         var GuiLayer = new guiLayer();
-        GuiLayer.init(90, 1, this.Score, this);
+        GuiLayer.init(10, 1, this.Score, this);
         
         this.addChild(GuiLayer);
 
@@ -490,8 +490,8 @@ var GameScene = cc.Scene.extend({
                 case ("Level3End") : {
                     var Scene = new playCutScene();
                     var imgList = [];
-                    imgList.push(res.cs_round4_1_png,res.cs_round4_2_png,res.cs_round4_3_png);
-                    Scene.init(this, "End", imgList);
+                    imgList.push(res.cs_round4_1_png,res.cs_round4_2_png,res.cs_round4_3_png,res.cs_round4_4_png);
+                    Scene.init(this, "Menu", imgList);
                     cc.director.pushScene(Scene);
                 } break;
                 case ("End") : {
