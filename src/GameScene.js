@@ -183,6 +183,8 @@ var endLayer = cc.Layer.extend({
         this._super();
         
         this.hadDied = 0;
+
+        this.setLocalZOrder(25);
         
         this.winsize = cc.director.getWinSize();
         this.centerpos = cc.p(this.winsize.width / 2, this.winsize.height / 2);
