@@ -98,8 +98,10 @@ var player = cc.Sprite.extend({
         }
         else
         {
+            this.ParentLog.velY = 0;
             if (this.fellInWater)
             {
+                
                 this.SplashTime += dt;
                 var FrameNumber = Math.floor(this.SplashTime / (1/16)) + 1;
 
@@ -131,6 +133,7 @@ var player = cc.Sprite.extend({
             {
                 this.setOpacity(0);
                 this.Scene.playerDie();
+                this.ParentLog.velY = 0;
                 this.wentToDeathScreen = 1;                
             }
         }
@@ -217,6 +220,7 @@ var player = cc.Sprite.extend({
     },
     die : function () {
         this.isDead = 1;
+        this.ParentLog.velY = 0;
     },
     decideSpriteFrame : function ( dt) {
         

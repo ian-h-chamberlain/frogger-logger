@@ -22,7 +22,7 @@ var environmentLayer = cc.Layer.extend({
     ctor:function() {
         this._super();
     },
-    init:function(){
+    init:function( townSprite){
         this._super();
         
         // We need this for placement information.
@@ -64,7 +64,7 @@ var environmentLayer = cc.Layer.extend({
             }
         }
 
-        this.scheduleUpdate();
+        //this.scheduleUpdate();
         
         // The river's bank at the top of the screen.
         var topBank = new cc.Sprite ( res.TopBank_png);
@@ -85,19 +85,9 @@ var environmentLayer = cc.Layer.extend({
         this.addChild( bottomBank);
         
         // The town at the top of the screen
-        this.town1 = new cc.Sprite (res.City1_png);
+        this.town1 = new cc.Sprite (townSprite);
         this.town1.setPosition (centerpos.x, winsize.height - 64);
         this.addChild( this.town1);
-        
-        this.town2 = new cc.Sprite (res.City2_png);
-        this.town2.setPosition (centerpos.x, winsize.height - 64);
-        this.town2.setOpacity(1);
-        this.addChild( this.town2);
-        
-        this.town3 = new cc.Sprite (res.City3_png);
-        this.town3.setPosition (centerpos.x, winsize.height - 64);
-        this.town3.setOpacity(1);
-        this.addChild( this.town3);
         
         //cc.log("Entered Play Scene");
         
@@ -105,6 +95,7 @@ var environmentLayer = cc.Layer.extend({
     },
 
     // update the water tile animations
+    /*
     update: function(dt) {
         this.waterTiles.time += dt;
         if (this.waterTiles.time - this.waterTiles.lastUpdate >= 0.02) {
@@ -118,6 +109,7 @@ var environmentLayer = cc.Layer.extend({
             }
         }
     }
+    */
 });
 
 var guiLayer = cc.Layer.extend({
@@ -306,16 +298,6 @@ var levelTemplateScene = cc.Scene.extend({
     },
     changeScoreBy : function ( deltaScore ) {
         this.Score += deltaScore;
-        if (this.Score > this.ScoreMilestone2)
-        {
-           //cc.log("city3");
-            this.EnvLayer.town3.setOpacity(255);
-        }
-        else if (this.Score > this.ScoreMilestone1)
-        {
-           //cc.log("city2");
-            this.EnvLayer.town2.setOpacity(255);
-        }
     },
     moveToNextStage : function () {
         //cc.log("Next stage: " + this.ActualGotoScene);
@@ -334,7 +316,7 @@ var level1Scene = levelTemplateScene.extend({
 
         // Environment
         this.EnvLayer = new environmentLayer();
-        this.EnvLayer.init();
+        this.EnvLayer.init(res.City1_png);
         this.addChild(this.EnvLayer);
         
         // Draw the game
@@ -375,7 +357,7 @@ var level2Scene = levelTemplateScene.extend({
 
         // Environment
         this.EnvLayer = new environmentLayer();
-        this.EnvLayer.init();
+        this.EnvLayer.init(res.City2_png);
         this.addChild(this.EnvLayer);
         
         // Draw the game
@@ -406,7 +388,7 @@ var level3Scene = levelTemplateScene.extend({
 
         // Environment
         this.EnvLayer = new environmentLayer();
-        this.EnvLayer.init();
+        this.EnvLayer.init( res.City3_png);
         this.addChild(this.EnvLayer);
         
         // Draw the game
