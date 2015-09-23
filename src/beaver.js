@@ -128,7 +128,10 @@ var BeaverLayer = cc.Layer.extend({
             not_hit = not_hit || targetLeft > beaverRight;
 
             if (!not_hit) {
-                cc.log("bodied");
+                // cc.log("bodied");
+                // play sound
+                cc.audioEngine.playEffect(res.beaver_wav, false);
+
                 var logLayer = this.parent.logLayer;
 
                 if (logLayer.getChildByName("player").ParentLog == this.logs[i]) {
@@ -270,6 +273,8 @@ var Splash = cc.Sprite.extend({
        this.y = y;
 
        this.Splashtime = 0;
+
+       cc.audioEngine.playEffect(res.splash_wav, false);
 
        this.scheduleUpdate();
 
