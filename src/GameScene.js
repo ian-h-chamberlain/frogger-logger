@@ -431,7 +431,7 @@ var level3Scene = levelTemplateScene.extend({
 
         // Saws
         var sawLayer = new SawLayer(this.logLayer.logs);
-        sawLayer.init(3, true);
+        sawLayer.init(2, true);
         this.addChild(sawLayer);
         
         this.addChild(GuiLayer);
