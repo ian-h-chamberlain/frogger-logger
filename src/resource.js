@@ -82,7 +82,8 @@ var res = {
     
     cs_round4_1_png : "res/cutscenes/cs_round4_1.png",
     cs_round4_2_png : "res/cutscenes/cs_round4_2.png",
-    cs_round4_3_png : "res/cutscenes/cs_round4_3.png"
+    cs_round4_3_png : "res/cutscenes/cs_round4_3.png",
+    cs_credits_png : "res/cutscenes/credits.png"
 };
 
 var g_resources = [];

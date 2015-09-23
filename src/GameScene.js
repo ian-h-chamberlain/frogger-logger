@@ -244,7 +244,7 @@ var levelTemplateScene = cc.Scene.extend({
         this.Score = 0;
         this.ScoreMilestone1 = 50;
         this.ScoreMilestone2 = 100;
-        this.ScoreVictory = 200;
+        this.ScoreVictory = 5000;
         
         this.ActualGotoScene;
         //cc.log("start next scene on MENU");
@@ -311,7 +311,9 @@ var level1Scene = levelTemplateScene.extend({
         initPhysics(this);
         cc.log("LVL1");
         this.initDeath();
-
+        
+        this.ScoreVictory = 5000;
+        
         // Environment
         this.EnvLayer = new environmentLayer();
         this.EnvLayer.init(res.City1_png);
@@ -330,8 +332,7 @@ var level1Scene = levelTemplateScene.extend({
         
         // Gui
         var GuiLayer = new guiLayer();
-        GuiLayer.init(90, 1, this.Score, this);
-        
+        GuiLayer.init(75, 1, this.Score, this);
         this.addChild(GuiLayer);
 
         // Saws
@@ -353,6 +354,8 @@ var level2Scene = levelTemplateScene.extend({
         initPhysics(this);
         this.initDeath();
 
+        this.ScoreVictory = 5000;
+        
         // Environment
         this.EnvLayer = new environmentLayer();
         this.EnvLayer.init(res.City2_png);
@@ -372,7 +375,7 @@ var level2Scene = levelTemplateScene.extend({
         // Gui
         var GuiLayer = new guiLayer();
 
-        GuiLayer.init(90, 2, this.Score, this);
+        GuiLayer.init(75, 2, this.Score, this);
 
         // Saws
         var sawLayer = new SawLayer(this.logLayer.logs);
@@ -408,7 +411,7 @@ var level3Scene = levelTemplateScene.extend({
         
         // Gui
         var GuiLayer = new guiLayer();
-        GuiLayer.init(90, 3, this.Score, this);
+        GuiLayer.init(75, 3, this.Score, this);
 
         // Saws
         var sawLayer = new SawLayer(this.logLayer.logs);
@@ -483,7 +486,7 @@ var GameScene = cc.Scene.extend({
                 case ("Level3End") : {
                     var Scene = new playCutScene();
                     var imgList = [];
-                    imgList.push(res.cs_round4_1_png,res.cs_round4_2_png,res.cs_round4_3_png,res.cs_round4_4_png);
+                    imgList.push(res.cs_round4_1_png,res.cs_round4_2_png,res.cs_round4_3_png,res.cs_round4_4_png, res.cs_credits_png);
                     Scene.init(this, "Menu", imgList);
                     cc.director.pushScene(Scene);
                 } break;

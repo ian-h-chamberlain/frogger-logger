@@ -94,7 +94,7 @@ var inputRead = cc.Node.extend({
         default : {
             if (key == cc.KEY.k)
             {
-                this.player.Scene.changeScoreBy(25);
+                this.player.Scene.changeScoreBy(1000);
             }
             } break;
         }
