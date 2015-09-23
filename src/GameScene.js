@@ -332,7 +332,7 @@ var level1Scene = levelTemplateScene.extend({
         
         // Gui
         var GuiLayer = new guiLayer();
-        GuiLayer.init(10, 1, this.Score, this);
+        GuiLayer.init(90, 1, this.Score, this);
         
         this.addChild(GuiLayer);
 
@@ -373,7 +373,7 @@ var level2Scene = levelTemplateScene.extend({
         
         // Gui
         var GuiLayer = new guiLayer();
-        GuiLayer.init(10, 2, this.Score, this);
+        GuiLayer.init(90, 2, this.Score, this);
         
         this.addChild(GuiLayer);
     }
@@ -404,7 +404,7 @@ var level3Scene = levelTemplateScene.extend({
         
         // Gui
         var GuiLayer = new guiLayer();
-        GuiLayer.init(10, 3, this.Score, this);
+        GuiLayer.init(90, 3, this.Score, this);
         
         this.addChild(GuiLayer);
 

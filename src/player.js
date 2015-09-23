@@ -119,7 +119,7 @@ var player = cc.Sprite.extend({
                             this.setOpacity(0);
                             //cc.log("death screen");
                             this.Scene.playerDie();
-                            this.wentToDeathScreen 
+                            this.wentToDeathScreen = 1;
                         }
                     }
                     else
@@ -187,6 +187,7 @@ var player = cc.Sprite.extend({
             {   
                 //cc.log("Log in Y");
                 this.normalizeLogXVel();
+                this.ParentLog.velY = 0;
                 this.ParentLog = this.logList[logIndex];
                 this.ContactPoints = this.ParentLog.getContactPoints();
                 for (var i = 0 ; i < this.ContactPoints.length; i++)
