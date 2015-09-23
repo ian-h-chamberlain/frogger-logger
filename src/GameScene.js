@@ -338,7 +338,7 @@ var level1Scene = levelTemplateScene.extend({
 
         // Saws
         var sawLayer = new SawLayer(this.logLayer.logs);
-        sawLayer.init();
+        sawLayer.init(1, false);
         this.addChild(sawLayer);
 
         // Beavers
@@ -373,7 +373,13 @@ var level2Scene = levelTemplateScene.extend({
         
         // Gui
         var GuiLayer = new guiLayer();
+
         GuiLayer.init(90, 2, this.Score, this);
+
+        // Saws
+        var sawLayer = new SawLayer(this.logLayer.logs);
+        sawLayer.init(2, false);
+        this.addChild(sawLayer);
         
         this.addChild(GuiLayer);
     }
@@ -405,6 +411,11 @@ var level3Scene = levelTemplateScene.extend({
         // Gui
         var GuiLayer = new guiLayer();
         GuiLayer.init(90, 3, this.Score, this);
+
+        // Saws
+        var sawLayer = new SawLayer(this.logLayer.logs);
+        sawLayer.init(2, true);
+        this.addChild(sawLayer);
         
         this.addChild(GuiLayer);
 

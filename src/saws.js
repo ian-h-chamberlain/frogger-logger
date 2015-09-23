@@ -26,11 +26,26 @@ var SawLayer = cc.Layer.extend({
 
     },
 
-    init:function() {
+    init:function(numSaws, random) {
         // Call super class's super function
         this._super();
 
-        this.addSaw(cc.winSize.width-32, cc.winSize.height/2, 0);
+        for (var i=0; i<numSaws; i++) {
+            var yHeight = (cc.winSize.height - 256)/(numSaws + 1);
+            yHeight *= i + 1;
+            yHeight += 128;
+            if (!random) {
+                this.addSaw(cc.winSize.width - 32, yHeight, 0);
+            }
+            else {
+                var vel;
+                if (i % 2 == 0)
+                    vel = 100;
+                else
+                    vel = -100;
+                this.addSaw(cc.winSize.width - 32, yHeight, vel);
+            }
+        }
 
     },
 
