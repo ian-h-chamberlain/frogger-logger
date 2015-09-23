@@ -154,11 +154,11 @@ var guiLayer = cc.Layer.extend({
         {
             if (this.Scene.Score < this.Scene.ScoreVictory)
             {
-                this.Scene.killPlayer("I'll never win this bet now!", false, true, false);
+                this.Scene.killPlayer("I'll  never  win  this  bet  now!", false, true, false);
             }
             else
             {
-                this.Scene.killPlayer("I'm on my way to winning this bet!", false, false, false);
+                this.Scene.killPlayer("I'm  on  my  way  to  winning  this  bet!", false, false, false);
             }
         }
         return true;
@@ -209,7 +209,7 @@ var endLayer = cc.Layer.extend({
     },
     score : function ( ) {
         this.img.setOpacity(0);
-        this.LabelEnter = new cc.LabelTTF( "HIT ENTER", "ArcadeClassic", 42, new cc.Size( 192, 128));
+        this.LabelEnter = new cc.LabelTTF( "HIT  ENTER", "ArcadeClassic", 42, new cc.Size( 192, 128));
         this.LabelEnter.setHorizontalAlignment( cc.TEXT_ALIGNMENT_CENTER);
         this.LabelEnter.setPosition(cc.p( this.winsize.width/2, this.winsize.height/2 - 64));
         this.LabelEnter.setColor( new cc.Color(216,216,216));
@@ -221,7 +221,7 @@ var endLayer = cc.Layer.extend({
         this.LabelNote.setColor( new cc.Color( 216,216,216));
         this.addChild( this.LabelNote);
         
-        this.LabelerScore = new cc.LabelTTF("SCORE:", "ArcadeClassic", 42, new cc.size(192, 128));
+        this.LabelerScore = new cc.LabelTTF("SCORE: ", "ArcadeClassic", 42, new cc.size(192, 128));
         this.LabelerScore.setHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);
         this.LabelerScore.setPosition(cc.p(this.winsize.width/2, this.winsize.height/2 + 64));
         this.LabelerScore.setColor(new cc.Color(216, 216, 216));

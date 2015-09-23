@@ -115,7 +115,7 @@ var SawLayer = cc.Layer.extend({
 
                 if (logLayer.getChildByName("player").ParentLog == this.logs[i]) {
                     // also kill the player
-                    cc.director.getRunningScene().killPlayer("Saw blades are sharp...", true, true, true);
+                    cc.director.getRunningScene().killPlayer("Saw  blades  are  sharp...", true, true, true);
                 }
                 else if (this.logs[i].getChildByName("beaver name string") != null) {
                     score += this.logs[i].getChildByName("beaver name string").getScore();
