@@ -93,7 +93,6 @@ var BeaverLayer = cc.Layer.extend({
                 // Check to see if beavers are ready to pounce
                 if (this.beavers[i].x <= this.target.x + 64) {
                     //pounce
-                    this.beavers[i].attack = true;
                     this.beavers[i].attackMode(this.target.y);
                 }
             }
@@ -122,6 +121,9 @@ var BeaverLayer = cc.Layer.extend({
     },
 
     checkHit:function(beaver, beaver_index, logs) {
+
+        var hit_found = false;
+
         for (i=0; i<logs.length; i++) {
             var targetTop = this.logs[i].y + (this.logs[i].height / 2);
             var targetBottom = this.logs[i].y - (this.logs[i].height / 2);
@@ -149,10 +151,16 @@ var BeaverLayer = cc.Layer.extend({
                     logLayer.removeChild(logLayer.logs[i]);
                     this.logs.splice(i, 1);
                 }
-            }
-            else {
+                hit_found = true;
+                break;
             }
         }
+
+        if (hit_found == false) {
+            var splash = new Splash(this.beavers[beaver_index].x, this.beavers[beaver_index].y);
+            this.addChild(splash);
+        }
+
         this.removeChild(this.beavers[beaver_index], true);
 
         this.beavers.splice(beaver_index, 1);
@@ -163,7 +171,22 @@ var BeaverLayer = cc.Layer.extend({
 var Beaver = cc.Sprite.extend({
     ctor: function(sprite) {
 
+        this.curFrame = 0;
+        this.sinceLastFrame = 0;
+
         this._super(sprite);
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.beaver_walk_1_png, cc.rect(0,0, 64, 64)), "beaver0");
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.beaver_walk_2_png, cc.rect(0,0, 64, 64)), "beaver1");
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.beaver_walk_3_png, cc.rect(0,0, 64, 64)), "beaver2");
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.beaver_walk_4_png, cc.rect(0,0, 64, 64)), "beaver3");
+        cc.spriteFrameCache.addSpriteFrame(
+            new cc.SpriteFrame(res.beaver_jump_png, cc.rect(0,0,64,64)), "beaver4");
+
+        this.inWater = false;
 
 
         //Beaver spawns slightly offscreen
@@ -180,16 +203,103 @@ var Beaver = cc.Sprite.extend({
     },
 
     update:function(dt) {
-        //cc.log("(" + this.x + ", " + this.y + ")");
+        if (this.attack == false && this.inWater == false) {
+            if (this.sinceLastFrame > .25) {
+                this.curFrame++;
+                if (this.curFrame > 3) {
+                    this.curFrame = 0;
+                }
+                this.sinceLastFrame = 0;
+            }
+            else {
+                this.sinceLastFrame += dt;
+            }
+        }
+        else if (this.attack == true) {
+            this.curFrame = 4;
+            this.sinceLastFrame = 0;
+        }
+        else if (this.inWater == true) {
+            if (this.sinceLastFrame > .1) {
+                this.curFrame++;
+                if (this.curFrame > 9) {
+                    this.killBeaver();
+                }
+                this.sinceLastFrame += dt;
+            }
+        }
+
+        this.setSpriteFrame("beaver" + this.curFrame);
     },
 
     attackMode:function(target_y) {
         // Move beaver vertically
-        var attackVelocity = 180;
-        this.velocity = attackVelocity;
+        this.velocity = 180;
 
         this.target_y = target_y;
 
+        this.attack = true;
+
+        this.curFrame = 4;
+        this.setSpriteFrame("beaver4");
+
+    },
+
+    killBeaver:function() {
+        // destroy the beaver
+
+        for (i = 0; i<this.parent.beavers.length; i++) {
+            if (this.parent.beavers[i] == this) {
+                this.parent.removeChild(this.beavers[i], true);
+
+                this.parent.beavers.splice(i, 1);
+            }
+        }
     }
 
+});
+
+var Splash = cc.Sprite.extend({
+   ctor:function(x, y) {
+
+       this._super(res.lumberjackSplash1_png);
+
+       cc.spriteFrameCache.addSpriteFrame(
+           new cc.SpriteFrame(res.lumberjackSplash1_png, cc.rect(0,0,64,64)), "splash0");
+       cc.spriteFrameCache.addSpriteFrame(
+           new cc.SpriteFrame(res.lumberjackSplash2_png, cc.rect(0,0,64,64)), "splash1");
+       cc.spriteFrameCache.addSpriteFrame(
+           new cc.SpriteFrame(res.lumberjackSplash3_png, cc.rect(0,0,64,64)), "splash2");
+       cc.spriteFrameCache.addSpriteFrame(
+           new cc.SpriteFrame(res.lumberjackSplash4_png, cc.rect(0,0,64,64)), "splash3");
+       cc.spriteFrameCache.addSpriteFrame(
+           new cc.SpriteFrame(res.lumberjackSplash5_png, cc.rect(0,0,64,64)), "splash4");
+
+       this.setSpriteFrame("splash0");
+
+       this.curFrame = 0;
+       this.sinceLastFrame = 0;
+       //this.setPosition(x, y);
+       this.x = x;
+       this.y = y;
+
+       this.Splashtime = 0;
+
+       this.scheduleUpdate();
+
+   },
+
+   update:function(dt) {
+       this.Splashtime += dt;
+       this.curFrame = Math.floor (this.Splashtime *16) + 1;
+
+       if (this.curFrame > 4) {
+           this.parent.removeChild(this);
+           return;
+       }
+
+       //this.sinceLastFrame += dt;
+
+       this.setSpriteFrame("splash"+ this.curFrame);
+   }
 });

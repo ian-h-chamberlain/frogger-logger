@@ -141,14 +141,14 @@ var Saw = cc.Sprite.extend({
         cc.spriteFrameCache.addSpriteFrame(
             new cc.SpriteFrame(res.saw_2_png, cc.rect(0, 0, 64, 64)), "saw1");
         cc.spriteFrameCache.addSpriteFrame(
-            new cc.SpriteFrame(res.saw_2_png, cc.rect(0, 0, 64, 64)), "saw2");
+            new cc.SpriteFrame(res.saw_3_png, cc.rect(0, 0, 64, 64)), "saw2");
 
         this.scheduleUpdate();
     },
 
     update:function(dt) {
 
-        if (this.sawActive == true) {;
+        if (this.sawActive == true) {
             if (this.sinceLastFrame > 0) {
                 this.curFrame++;
                 if (this.curFrame > 2) {

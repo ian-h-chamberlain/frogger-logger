@@ -117,7 +117,7 @@ var player = cc.Sprite.extend({
                             this.setOpacity(0);
                             //cc.log("death screen");
                             this.Scene.playerDie();
-                            this.wentToDeathScreen 
+                            this.wentToDeathScreen = 1;
                         }
                     }
                     else
