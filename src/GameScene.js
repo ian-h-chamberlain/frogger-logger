@@ -324,8 +324,10 @@ var level1Scene = levelTemplateScene.extend({
         var log = this.logLayer.logs[0];
         
         this.Player = new player( log, this.logLayer.logs, this);
+        this.Player.setOpacity(0);
         this.logLayer.addChild(this.Player);
         this.Player.setName("player");
+        this.Player.setOpacity(255);
         
         // Gui
         var GuiLayer = new guiLayer();
