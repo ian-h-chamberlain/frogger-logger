@@ -71,23 +71,20 @@ var environmentLayer = cc.Layer.extend({
         topBank.setPosition( centerpos.x, winsize.height - 64);
         this.addChild( topBank);
         
+        // The town at the top of the screen
+        this.town1 = new cc.Sprite (townSprite);
+        this.town1.setPosition (centerpos.x, winsize.height - 64);
+        this.addChild( this.town1);
+        
         // Add the wood GUI panels.
-        var LeftPanel = new cc.Sprite (res.GuiWoodPanel_png);
-        LeftPanel.setPosition(196/2 - 1, winsize.height - 64);
-        this.addChild( LeftPanel);
-        var RightPanel = new cc.Sprite (res.GuiWoodPanel_png);
-        RightPanel.setPosition(winsize.width - (196/2 - 1) , winsize.height - 64);
-        this.addChild( RightPanel);
+        var Panel = new cc.Sprite (res.GuiWoodPanel_png);
+        Panel.setPosition(winsize.width/2, winsize.height - 64);
+        this.addChild( Panel);
         
         // The river's bank at the bottom of the screen.
         var bottomBank = new cc.Sprite (res.BottomBank_png);
         bottomBank.setPosition( centerpos.x, 64);
         this.addChild( bottomBank);
-        
-        // The town at the top of the screen
-        this.town1 = new cc.Sprite (townSprite);
-        this.town1.setPosition (centerpos.x, winsize.height - 64);
-        this.addChild( this.town1);
         
         //cc.log("Entered Play Scene");
         
