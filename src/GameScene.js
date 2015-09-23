@@ -22,7 +22,7 @@ var environmentLayer = cc.Layer.extend({
     ctor:function() {
         this._super();
     },
-    init:function( townSprite){
+    init:function(townSprite){
         this._super();
         
         // We need this for placement information.
@@ -64,7 +64,7 @@ var environmentLayer = cc.Layer.extend({
             }
         }
 
-        //this.scheduleUpdate();
+        this.scheduleUpdate();
         
         // The river's bank at the top of the screen.
         var topBank = new cc.Sprite ( res.TopBank_png);
@@ -95,7 +95,6 @@ var environmentLayer = cc.Layer.extend({
     },
 
     // update the water tile animations
-    /*
     update: function(dt) {
         this.waterTiles.time += dt;
         if (this.waterTiles.time - this.waterTiles.lastUpdate >= 0.02) {
@@ -109,7 +108,6 @@ var environmentLayer = cc.Layer.extend({
             }
         }
     }
-    */
 });
 
 var guiLayer = cc.Layer.extend({
