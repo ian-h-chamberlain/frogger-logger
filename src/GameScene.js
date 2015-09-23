@@ -309,7 +309,7 @@ var level1Scene = levelTemplateScene.extend({
         cc.log("LVL1");
         this.initDeath();
         
-        this.ScoreVictory = 5000;
+        this.ScoreVictory = 4000;
         
         // Environment
         this.EnvLayer = new environmentLayer();
@@ -400,7 +400,7 @@ var level3Scene = levelTemplateScene.extend({
         cc.log("LVL3");
         initPhysics(this);
         this.initDeath();
-
+        this.ScoreVictory = 6000;
         // Environment
         this.EnvLayer = new environmentLayer();
         this.EnvLayer.init( res.City3_png);
