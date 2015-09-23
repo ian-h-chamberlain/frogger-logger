@@ -101,7 +101,8 @@ var player = cc.Sprite.extend({
             this.ParentLog.velY = 0;
             if (this.fellInWater)
             {
-                
+                this.SplashTime += dt;
+                var FrameNumber = Math.floor(this.SplashTime / (1/16)) + 1;
 
                 // play splash effect
                 if (FrameNumber == 1) {
