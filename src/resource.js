@@ -66,6 +66,12 @@ var res = {
     water8_png: "res/water/water8.png",
     water9_png: "res/water/water9.png",
 
+    beaver_walk_1_png: "res/beaver/beaver_walk_1.png",
+    beaver_walk_2_png: "res/beaver/beaver_walk_2.png",
+    beaver_walk_3_png: "res/beaver/beaver_walk_3.png",
+    beaver_walk_4_png: "res/beaver/beaver_walk_4.png",
+    beaver_jump_png: "res/beaver/beaver_jump.png",
+
     arcadeclassic_ttf: "res/font/ArcadeClassic.ttf",
     
     cs_intro1_png : "res/cutscenes/cs_intro1.png",
